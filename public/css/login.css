@@ -1,0 +1,85 @@
+/* Define a margem e o padding como zero */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 50% 50%; /* Cria duas colunas: 50% para a imagem e 50% para o formulário */
+}
+
+/* Define a área de imagem como um background */
+.image-side {
+    background-image: url('/images/fundo_login.svg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* Garante que a altura da imagem seja 100% da altura da tela */
+}
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5; /* Cor de fundo do formulário */
+    height: 100vh; /* Garante que o container ocupe toda a altura da tela */
+}
+
+
+form {
+    display: flex;
+    flex-direction: column; /* Coloca os elementos em uma coluna */
+    align-items: center; /* Centraliza os itens horizontalmente */
+    justify-content: center; /* Centraliza os itens verticalmente */
+    background: linear-gradient(135deg, #fffaca, #c9ffca); /* Degradê de amarelo claro para verde claro */
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    width: 500px;
+    height: 400px;
+    border: solid px #258A26;
+    border-radius: 10px;
+}
+
+h1 {
+    text-align: center; /* Centraliza o texto do título */
+    margin-bottom: 60px;
+    font-size: 40px;
+}
+
+label {
+    align-self: flex-start; /* Alinha os labels à esquerda dentro do formulário */
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+
+input {
+    width: 480px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #E8E8E8;
+}
+
+
+.button-group {
+    width: 100%; 
+    display: flex; /* Usa Flexbox */
+    justify-content: center; /* Centraliza horizontalmente */
+}
+
+.button-group button {
+    width: 200px; /* Define a largura fixa */
+    padding: 10px;
+    background-color: #76B624; 
+    color: white;
+    border: 1px #1B9C1D;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.button-group button:hover {
+    background-color: #8bc73d; /* Cor um pouco mais escura ao passar o mouse */
+}
