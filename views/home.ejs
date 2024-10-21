@@ -18,10 +18,54 @@
             <ul>
                 <li><a href="/gestor/services">SERVIÇOS</a></li>
                 <li><a href="/gestor/farm">FAZENDAS</a></li>
-                <li><a href="#"><img src="/images/perfil.svg" alt="Perfil" class="perfil-icon"></a></li> 
+                <li>
+
+                    <button class="perfil-btn" id="openModalBtn">
+                        <img src="/images/perfil.svg" alt="Perfil" class="perfil-icon">
+                    </button>
+                </li>
             </ul>
         </nav>
+        
+        <div id="perfilModal" class="modal">
+            <div class="modal-content">
+                <ul>
+                    <li>
+                        <button class="header-button" type="button" onclick="window.location.href='/gestor/user'">
+                            <img src="/images/newuser.svg" alt="Novo Usuário" class="icon"> Novo usuário
+                        </button>
+                    </li>
+                    <li>
+                        <button class="header-button" type="button" onclick="window.location.href='/gestor/login'">
+                            <img src="/images/logout.svg" alt="Logout" class="icon"> Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </header>
+
+
+    <script>
+                // Pegar o botão e o modal
+        const openModalBtn = document.getElementById('openModalBtn');
+        const modal = document.getElementById('perfilModal');
+
+        // Quando o botão for clicado, mostra ou esconde o modal
+        openModalBtn.onclick = function(event) {
+            event.stopPropagation(); // Evita que o clique no botão feche o modal
+            modal.classList.toggle('show'); // Alterna a visibilidade do modal
+        };
+
+        // Fecha o modal ao clicar fora dele
+        window.onclick = function(event) {
+            if (!modal.contains(event.target) && event.target !== openModalBtn) {
+                modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
+            }
+        };
+
+
+    </script>
 </body>
 </html>
 

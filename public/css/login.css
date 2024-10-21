@@ -30,7 +30,7 @@ form {
     flex-direction: column; 
     align-items: center; 
     justify-content: center; 
-    background: linear-gradient(135deg, #fffaca, #c9ffca); 
+    background: linear-gradient(135deg, #c9ffca, #fffaca);
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     width: 500px;

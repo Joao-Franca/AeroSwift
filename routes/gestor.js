@@ -18,11 +18,6 @@ router.get("/services", (req, res) => {
   res.render("services");
 });
 
-//Rota para exibir a tela de cadastrar aplicações
-router.get("/applications", (req, res) => {
-  res.render("applications");
-});
-
 //Rota para exibir a tela de fazendas
 router.get("/farm", (req, res) => {
   res.render("farm");
