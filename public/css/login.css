@@ -1,19 +1,18 @@
-/* Define a margem e o padding como zero */
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
     height: 100vh;
     display: grid;
-    grid-template-columns: 50% 50%; /* Cria duas colunas: 50% para a imagem e 50% para o formulário */
+    grid-template-columns: 50% 50%; 
 }
 
-/* Define a área de imagem como um background */
+
 .image-side {
     background-image: url('/images/fundo_login.svg');
     background-size: cover;
     background-position: center;
-    height: 100vh; /* Garante que a altura da imagem seja 100% da altura da tela */
+    height: 100vh; 
 }
 
 
@@ -21,17 +20,17 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f5f5f5; /* Cor de fundo do formulário */
-    height: 100vh; /* Garante que o container ocupe toda a altura da tela */
+    background-color: #f5f5f5; 
+    height: 100vh; 
 }
 
 
 form {
     display: flex;
-    flex-direction: column; /* Coloca os elementos em uma coluna */
-    align-items: center; /* Centraliza os itens horizontalmente */
-    justify-content: center; /* Centraliza os itens verticalmente */
-    background: linear-gradient(135deg, #fffaca, #c9ffca); /* Degradê de amarelo claro para verde claro */
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    background: linear-gradient(135deg, #fffaca, #c9ffca); 
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     width: 500px;
@@ -41,13 +40,13 @@ form {
 }
 
 h1 {
-    text-align: center; /* Centraliza o texto do título */
+    text-align: center; 
     margin-bottom: 60px;
     font-size: 40px;
 }
 
 label {
-    align-self: flex-start; /* Alinha os labels à esquerda dentro do formulário */
+    align-self: flex-start; 
     margin-bottom: 15px;
     font-weight: 600;
 }
@@ -65,12 +64,12 @@ input {
 
 .button-group {
     width: 100%; 
-    display: flex; /* Usa Flexbox */
-    justify-content: center; /* Centraliza horizontalmente */
+    display: flex; 
+    justify-content: center; 
 }
 
 .button-group button {
-    width: 200px; /* Define a largura fixa */
+    width: 200px; 
     padding: 10px;
     background-color: #76B624; 
     color: white;
@@ -81,5 +80,5 @@ input {
 }
 
 .button-group button:hover {
-    background-color: #8bc73d; /* Cor um pouco mais escura ao passar o mouse */
+    background-color: #8bc73d; 
 }

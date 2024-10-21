@@ -8,6 +8,32 @@ router.get("/login", (req, res) => {
     res.render("login");
   });
 
+//Rota para exibir a tela inicial
+router.get("/home", (req, res) => {
+  res.render("home");
+});
+
+//Rota para exibir a tela de serviços
+router.get("/services", (req, res) => {
+  res.render("services");
+});
+
+//Rota para exibir a tela de cadastrar aplicações
+router.get("/applications", (req, res) => {
+  res.render("applications");
+});
+
+//Rota para exibir a tela de fazendas
+router.get("/farm", (req, res) => {
+  res.render("farm");
+});
+
+//Rota para exibir a tela de cadastrar usuários
+router.get("/user", (req, res) => {
+  res.render("user");
+});
+
+
 //Rota para processar formulário de login
 router.post('/login', async (req, res) => {
     const { usuario, password } = req.body;
