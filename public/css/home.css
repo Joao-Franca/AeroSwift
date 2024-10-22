@@ -78,13 +78,13 @@ nav ul li a:hover {
     z-index: 2;
     width: 200px;
     background-color: #fefefe;
-    border-radius: 15px; /* Aplica o border-radius a todo o modal */
+    border-radius: 15px; 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .modal-content {
-    border-radius: 15px; /* Aplica o border-radius à div de conteúdo */
-    overflow: hidden; /* Para garantir que o conteúdo siga o border-radius */
+    border-radius: 15px; 
+    overflow: hidden; 
 }
 
 .modal-content ul {

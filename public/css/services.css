@@ -63,39 +63,38 @@ nav ul li a:hover {
     color: #007bff;
 }
 
-/* Estilo do formulário */
 .form-container {
-    width: 400px; /* Aumentei a largura do contêiner */
-    padding: 20px; /* Aumentei o padding para espaçar melhor os elementos */
+    width: 400px; 
+    padding: 20px; 
     margin: 50px auto;
     border: 1px solid #ccc;
-    border-radius: 10px; /* Aumentei um pouco o arredondamento */
+    border-radius: 10px; 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
 .form-container h2 {
-    margin-bottom: 25px; /* Aumentei o espaçamento do título */
-    font-size: 24px; /* Aumentei o tamanho da fonte do título */
+    margin-bottom: 25px; 
+    font-size: 24px; 
 }
 
 .form-group {
-    margin-bottom: 20px; /* Aumentei o espaçamento entre os grupos de formulário */
+    margin-bottom: 20px; 
     text-align: left;
 }
 
 .form-group label {
     display: block;
-    font-size: 16px; /* Aumentei o tamanho da fonte dos rótulos */
+    font-size: 16px;
     margin-bottom: 8px;
 }
 
 .form-group select {
     width: 100%;
-    padding: 12px; /* Aumentei o padding para deixar o campo maior */
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 16px; /* Aumentei o tamanho da fonte do campo de seleção */
+    font-size: 16px; 
 }
 
 .form-actions {
@@ -105,9 +104,9 @@ nav ul li a:hover {
 
 .cancel-button,
 .submit-button {
-    width: 48%; /* Aumentei ligeiramente a largura dos botões */
-    padding: 12px; /* Aumentei o padding dos botões */
-    font-size: 16px; /* Aumentei o tamanho da fonte dos botões */
+    width: 48%; 
+    padding: 12px; 
+    font-size: 16px; 
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -152,13 +151,13 @@ nav ul li a:hover {
     z-index: 2;
     width: 200px;
     background-color: #fefefe;
-    border-radius: 15px; /* Aplica o border-radius a todo o modal */
+    border-radius: 15px; 
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .modal-content {
-    border-radius: 15px; /* Aplica o border-radius à div de conteúdo */
-    overflow: hidden; /* Para garantir que o conteúdo siga o border-radius */
+    border-radius: 15px; 
+    overflow: hidden;
 }
 
 .modal-content ul {
