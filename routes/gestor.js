@@ -1,34 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../db.js")
-const bcrypt = require('bcrypt')   //Serve para colocar um hash quando cadastra a senha
+const pool = require("../db.js");
+const bcrypt = require('bcrypt');
+const isAuthenticated = require('../middleware/auth'); // Middleware de autenticação
 
 // Rota para exibir o formulário de login
 router.get("/login", (req, res) => {
   res.render("login", { errorMessage: '' });
 });
 
-//Rota para exibir a tela inicial
-router.get("/home", (req, res) => {
-  res.render("home");
-});
-
-//Rota para exibir a tela de serviços
-router.get("/services", (req, res) => {
-  res.render("services");
-});
-
-//Rota para exibir a tela de fazendas
-router.get("/farm", (req, res) => {
-  res.render("farm");
-});
-
-//Rota para exibir a tela de cadastrar usuários
-router.get("/user", (req, res) => {
-  res.render("user");
-});
-
-
+// Rota para processar o login
 router.post('/login', async (req, res) => {
   const { usuario, password } = req.body;
 
@@ -43,6 +24,9 @@ router.post('/login', async (req, res) => {
       const isMatch = await bcrypt.compare(password, user.senha);
 
       if (isMatch) {
+        // Salva o estado de login na sessão
+        req.session.userId = user.id;
+        req.session.isAuthenticated = true;
         res.redirect('/gestor/home'); // Redireciona para /gestor/home após login bem-sucedido
       } else {
         res.render('login', { errorMessage: 'Usuário ou senha incorretos' });
@@ -56,9 +40,36 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Rota de logout para encerrar a sessão do gestor
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Erro ao encerrar a sessão:', err);
+            return res.redirect('/gestor/home'); // Redireciona para home se houver um erro
+        }
+        res.clearCookie('connect.sid'); // Remove o cookie de sessão do navegador
+        res.redirect('/gestor/login'); // Redireciona para a página de login do gestor
+    });
+});
 
+// Rota para exibir a tela inicial (protegida)
+router.get("/home", isAuthenticated, (req, res) => {
+  res.render("home");
+});
 
+// Rota para exibir a tela de serviços (protegida)
+router.get("/services", isAuthenticated, (req, res) => {
+  res.render("services");
+});
 
+// Rota para exibir a tela de fazendas (protegida)
+router.get("/farm", isAuthenticated, (req, res) => {
+  res.render("farm");
+});
 
+// Rota para exibir a tela de cadastrar usuários (protegida)
+router.get("/user", isAuthenticated, (req, res) => {
+  res.render("user");
+});
 
-module.exports = router
+module.exports = router;

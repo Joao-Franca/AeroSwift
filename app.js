@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const pool = require("./db.js")
+const sessionMiddleware = require("./middleware/session"); 
 const app = express();
 
 
@@ -9,6 +10,7 @@ app.set("view engine", "ejs");
 
 app.use(express.static('public'));
 
+app.use(sessionMiddleware);
 
 // Importar as rotas
 const gestorRoutes = require("./routes/gestor");
