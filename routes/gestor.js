@@ -3,10 +3,10 @@ const router = express.Router();
 const pool = require("../db.js")
 const bcrypt = require('bcrypt')   //Serve para colocar um hash quando cadastra a senha
 
-//Rota para exibir nosso formulário de login
+// Rota para exibir o formulário de login
 router.get("/login", (req, res) => {
-    res.render("login");
-  });
+  res.render("login", { errorMessage: '' });
+});
 
 //Rota para exibir a tela inicial
 router.get("/home", (req, res) => {
@@ -29,33 +29,33 @@ router.get("/user", (req, res) => {
 });
 
 
-//Rota para processar formulário de login
 router.post('/login', async (req, res) => {
-    const { usuario, password } = req.body;
-  
-    try{
-      const query = 'SELECT * FROM gestor WHERE usuario = $1'
-      const result = await pool.query(query, [usuario])
-  
-      if(result.rows.length > 0 ){
-        const user = result.rows[0]
-  
-        //Verficica a senha fornecida corresponde a criptografada
-        const isMatch = await bcrypt.compare(password, user.password)
-  
-        if(isMatch){
-          res.redirect('/gestot/login')
-        }else{
-          res.status(400).send('Senha Incorreta')
-        }
-      }else{
-        res.status(400).send('Usuário não encontrado')
+  const { usuario, password } = req.body;
+
+  try {
+    const query = 'SELECT * FROM gestor WHERE usuario = $1';
+    const result = await pool.query(query, [usuario]);
+
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+
+      // Verifica se a senha fornecida corresponde à senha criptografada no banco de dados
+      const isMatch = await bcrypt.compare(password, user.senha);
+
+      if (isMatch) {
+        res.redirect('/gestor/home'); // Redireciona para /gestor/home após login bem-sucedido
+      } else {
+        res.render('login', { errorMessage: 'Usuário ou senha incorretos' });
       }
-    }catch(err){
-      console.error('Erro ao realizar o login', err);
-      res.status(500).send("Erro ao processar o login.");
+    } else {
+      res.render('login', { errorMessage: 'Usuário não encontrado' });
     }
-  })
+  } catch (err) {
+    console.error('Erro ao realizar o login', err);
+    res.render('login', { errorMessage: 'Erro ao processar o login.' });
+  }
+});
+
 
 
 

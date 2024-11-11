@@ -11,18 +11,22 @@
 
     <div class="image-side"></div>
 
-
     <div class="container">
         <form action="/gestor/login" method="post">
             <h1>Login</h1>
             <label for="usuario">Usuário:</label>
-            <input type="usuario" id="usuario" name="usuario" placeholder="" maxlength="100">
+            <input type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" maxlength="100" required>
         
             <label for="password">Senha:</label>
-            <input type="password" id="password" name="password" placeholder="" maxlength="100">
-        
+            <input type="password" id="password" name="password" placeholder="Digite sua senha" maxlength="100" required>
+
+            <!-- Exibe a mensagem de erro, se houver, logo abaixo do campo de senha -->
+            <% if (errorMessage) { %>
+                <p style="color: red; font-weight: bold; text-align: center;"><%= errorMessage %></p>
+            <% } %>
+
             <div class="button-group">
-                <button type="submit" href="/..">Logar</button>
+                <button type="submit">Logar</button>
             </div>
         </form>
     </div>
