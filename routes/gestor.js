@@ -34,7 +34,7 @@ router.post('/login', async (req, res) => {
     const { usuario, password } = req.body;
   
     try{
-      const query = 'SELECT * FROM users WHERE email = $1'
+      const query = 'SELECT * FROM gestor WHERE usuario = $1'
       const result = await pool.query(query, [usuario])
   
       if(result.rows.length > 0 ){
@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password)
   
         if(isMatch){
-          res.redirect('/clientes/clientes')
+          res.redirect('/gestot/login')
         }else{
           res.status(400).send('Senha Incorreta')
         }
@@ -56,6 +56,8 @@ router.post('/login', async (req, res) => {
       res.status(500).send("Erro ao processar o login.");
     }
   })
+
+
 
 
 
