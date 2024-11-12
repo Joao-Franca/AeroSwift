@@ -12,6 +12,8 @@ function isAuthenticated(req, res, next) {
         return res.redirect('/gestor/login');
     }
 
+    // Redireciona para a página de login padrão se nenhuma condição anterior for atendida
+    return res.redirect('/gestor/login');
 }
 
 module.exports = isAuthenticated;

@@ -57,71 +57,6 @@ nav ul li a:hover {
     color: #007bff;
 }
 
-.form-container {
-    width: 400px; 
-    padding: 20px; 
-    margin: 50px auto;
-    border: 1px solid #ccc;
-    border-radius: 10px; 
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-.form-container h2 {
-    margin-bottom: 25px;
-    font-size: 24px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 8px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: space-between;
-}
-
-.cancel-button, .submit-button {
-    width: 48%;
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    color: white;
-}
-
-.cancel-button {
-    background-color: #D32F2F;
-}
-
-.submit-button {
-    background-color: #4CAF50;
-}
-
-.cancel-button:hover {
-    background-color: #b71c1c;
-}
-
-.submit-button:hover {
-    background-color: #388E3C;
-}
-
 .perfil-btn {
     background: none;
     border: none;
@@ -193,22 +128,104 @@ nav ul li a:hover {
     display: block;
 }
 
-.usuarios-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    color: #fff;
-    background-color: #007BFF; /* Azul, ajuste conforme necessário */
-    text-decoration: none;
-    border-radius: 5px;
+/* Container dos Usuários */
+.users-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Título da Tabela */
+.table-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+/* Tabela dos Usuários */
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.users-table th, .users-table td {
+    border: 1px solid #dddddd;
+    padding: 15px;
+}
+
+.users-table th {
+    background-color: #f2f2f2;
+    text-align: center;
     font-weight: bold;
-    transition: background-color 0.3s, transform 0.3s;
 }
 
-.usuarios-btn:hover {
-    background-color: #0056b3; /* Cor mais escura para hover */
-    transform: scale(1.05); /* Aumenta um pouco o tamanho ao passar o mouse */
+.users-table td {
+    text-align: center;
+    vertical-align: middle; /* Centralizar verticalmente */
 }
 
-.usuarios-btn:active {
-    transform: scale(0.95); /* Reduz um pouco o tamanho ao clicar */
+/* Centralizando as ações */
+.users-table td .actions {
+    display: flex;
+    align-items: center;  /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente os botões */
+    gap: 10px; /* Espaço entre os botões */
+}
+
+/* Botões de Ação */
+.edit-button, .save-button, .cancel-button, .delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    transition: transform 0.2s ease;
+}
+
+.edit-button svg {
+    color: #007bff;
+}
+
+.delete-button svg {
+    color: #e74c3c;
+}
+
+/* Efeito hover para os botões de ação */
+.edit-button:hover, .delete-button:hover {
+    transform: scale(1.1);
+}
+
+/* Botões ao Habilitar Edição */
+.save-button {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.cancel-button {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Efeitos ao Editar */
+.editable {
+    background-color: #f9f2d4;
+    border: 1px dashed #e3c97a;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .users-table th, .users-table td {
+        padding: 10px;
+    }
+
+    .users-container {
+        padding: 15px;
+        width: 90%;
+    }
 }
