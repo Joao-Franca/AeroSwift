@@ -28,6 +28,7 @@
         
         <div id="perfilModal" class="modal">
             <div class="modal-content">
+                <span class="close-modal" id="closePerfilModal">&times;</span>
                 <ul>
                     <li>
                         <button class="header-button" type="button" onclick="window.location.href='/gestor/user'">
@@ -44,27 +45,99 @@
         </div>
     </header>
 
+    <main>
+        <!-- Container para o botão de nova fazenda -->
+        <div class="nova-fazenda-container">
+            <button class="fazenda-submit-btn" id="novaFazendaBtn">Nova Fazenda</button>
+        </div>
 
+        <!-- Modal para adicionar uma nova fazenda -->
+        <div id="fazendaModal" class="fazenda-modal">
+            <div class="fazenda-modal-content">
+                <span class="fazenda-close-modal" id="closeFazendaModal">&times;</span>
+                <h3>Adicionar Nova Fazenda</h3>
+                <form action="/gestor/farm/add" method="POST" enctype="multipart/form-data">
+                    <div class="fazenda-form-group">
+                        <label for="nomeFazenda">Nome da Fazenda:</label>
+                        <input type="text" id="nomeFazenda" name="nomeFazenda" required>
+                    </div>
+                    <div class="fazenda-form-group">
+                        <label for="imagemFazenda">Imagem da Fazenda:</label>
+                        <input type="file" id="imagemFazenda" name="imagemFazenda" accept="image/*" required>
+                    </div>
+                    <div class="fazenda-form-group">
+                        <label for="pdfFazenda">PDF da Fazenda:</label>
+                        <input type="file" id="pdfFazenda" name="pdfFazenda" accept=".pdf" required>
+                    </div>
+                    <button type="submit" class="fazenda-submit-btn">Salvar Fazenda</button>
+                </form>
+            </div>
+        </div>
 
+        <!-- Seção para listar fazendas -->
+        <section class="fazendas-list">
+            <% fazendas.forEach(fazenda => { %>
+                <div class="fazenda-item">
+                    <!-- Imagem da fazenda -->
+                    <% if (fazenda.imagem) { %>
+                        <img src="<%= fazenda.imagem %>" alt="Imagem da Fazenda <%= fazenda.nome %>" class="fazenda-imagem">
+                    <% } %>
+
+                    <!-- Informações da fazenda -->
+                    <div class="fazenda-info">
+                        <div class="fazenda-nome"><%= fazenda.nome %></div>
+
+                        <!-- Link para o PDF -->
+                        <% if (fazenda.mapa) { %>
+                            <a href="<%= fazenda.mapa %>" target="_blank" class="fazenda-pdf-link">Visualizar PDF</a>
+                        <% } else { %>
+                            <p class="fazenda-sem-pdf">PDF não disponível</p>
+                        <% } %>
+                    </div>
+                </div>
+            <% }) %>
+        </section>
+    </main>
 
     <script>
-            // Pegar o botão e o modal
-    const openModalBtn = document.getElementById('openModalBtn');
-    const modal = document.getElementById('perfilModal');
+        // Modal de perfil
+        const openModalBtn = document.getElementById('openModalBtn');
+        const perfilModal = document.getElementById('perfilModal');
+        const closePerfilModal = document.getElementById('closePerfilModal');
 
-    // Quando o botão for clicado, mostra ou esconde o modal
-    openModalBtn.onclick = function(event) {
-        event.stopPropagation(); // Evita que o clique no botão feche o modal
-        modal.classList.toggle('show'); // Alterna a visibilidade do modal
-    };
+        openModalBtn.onclick = function(event) {
+            event.stopPropagation();
+            perfilModal.style.display = 'block';
+        };
 
-    // Fecha o modal ao clicar fora dele
-    window.onclick = function(event) {
-        if (!modal.contains(event.target) && event.target !== openModalBtn) {
-            modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
-        }
-    };
+        closePerfilModal.onclick = function() {
+            perfilModal.style.display = 'none';
+        };
+
+        window.onclick = function(event) {
+            if (event.target === perfilModal) {
+                perfilModal.style.display = 'none';
+            }
+        };
+
+        // Modal de nova fazenda
+        const novaFazendaBtn = document.getElementById('novaFazendaBtn');
+        const fazendaModal = document.getElementById('fazendaModal');
+        const closeFazendaModal = document.getElementById('closeFazendaModal');
+
+        novaFazendaBtn.onclick = function() {
+            fazendaModal.style.display = 'block';
+        };
+
+        closeFazendaModal.onclick = function() {
+            fazendaModal.style.display = 'none';
+        };
+
+        window.onclick = function(event) {
+            if (event.target === fazendaModal) {
+                fazendaModal.style.display = 'none';
+            }
+        };
     </script>
-
 </body>
 </html>

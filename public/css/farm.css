@@ -127,3 +127,160 @@ nav ul li a:hover {
 .modal.show {
     display: block;
 }
+
+/* Estilo do modal de nova fazenda */
+.fazenda-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.5); 
+}
+
+.fazenda-modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; 
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%; 
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.fazenda-close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.fazenda-close-modal:hover,
+.fazenda-close-modal:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+.fazenda-form-group {
+    margin-bottom: 15px;
+}
+
+.fazenda-form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.fazenda-form-group input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.fazenda-submit-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.fazenda-submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.fazenda-users-container {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 50%;
+    margin: 20px auto;
+}
+
+.fazenda-table-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.fazenda-users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.fazenda-users-table th,
+.fazenda-users-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.fazenda-users-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.fazenda-edit-button img,
+.fazenda-delete-button img {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.fazenda-edit-button,
+.fazenda-delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Container do botão Nova Fazenda */
+.nova-fazenda-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 50px;
+}
+
+/* Estilo para lista de fazendas */
+.fazendas-list {
+    margin: 20px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Adiciona um espaçamento entre os elementos da lista */
+}
+
+.fazenda-item {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.fazenda-imagem {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    margin-right: 15px;
+}
+
+.fazenda-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.fazenda-nome {
+    font-size: 18px;
+    font-weight: bold;
+}

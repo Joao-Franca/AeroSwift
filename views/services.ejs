@@ -19,7 +19,6 @@
                 <li><a href="/gestor/home">OPERAÇÕES</a></li>
                 <li><a href="/gestor/farm">FAZENDAS</a></li>
                 <li>
-
                     <button class="perfil-btn" id="openModalBtn">
                         <img src="/images/perfil.svg" alt="Perfil" class="perfil-icon">
                     </button>
@@ -44,7 +43,6 @@
             </div>
         </div>
     </header>
-
 
     <div class="form-container">
         <h2>Cadastrar serviço</h2>
@@ -80,16 +78,19 @@
                     <option value="1">Colaborador AeroSwift</option>
                 </select>
             </div>
+
+            <div class="form-group">
+                <label for="dataServico">Data do Serviço</label>
+                <input type="date" id="dataServico" name="dataServico" required class="input-date">
+            </div>
     
             <div class="form-actions">
                 <button type="button" class="cancel-button" onclick="window.location.href='/gestor/home'">Cancelar</button>
                 <button type="submit" class="submit-button">Cadastrar</button>
             </div>
-            
         </form>
     </div>
     
-
     <script>
             // Pegar o botão e o modal
     const openModalBtn = document.getElementById('openModalBtn');
@@ -110,4 +111,3 @@
     </script>
 </body>
 </html>
-

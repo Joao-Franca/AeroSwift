@@ -14,7 +14,9 @@
         </div>
 
         <nav>
+            
             <ul>
+                <li><a href="/gestor/home">OPERAÇÕES</a></li>
                 <li><a href="/gestor/services">SERVIÇOS</a></li>
                 <li><a href="/gestor/farm">FAZENDAS</a></li>
                 <li>
@@ -44,7 +46,7 @@
     </header>
 
     <div class="users-container">
-        <h2 class="table-title">Lista de Usuários</h2>
+        <h2 class="table-title">Lista de usuários</h2>
         <table class="users-table">
             <thead>
                 <tr>
@@ -79,6 +81,23 @@
     </div>
 
     <script>
+         // Pegar o botão e o modal
+         const openModalBtn = document.getElementById('openModalBtn');
+        const modal = document.getElementById('perfilModal');
+
+        // Quando o botão for clicado, mostra ou esconde o modal
+        openModalBtn.onclick = function(event) {
+            event.stopPropagation(); // Evita que o clique no botão feche o modal
+            modal.classList.toggle('show'); // Alterna a visibilidade do modal
+        };
+
+        // Fecha o modal ao clicar fora dele
+        window.onclick = function(event) {
+            if (!modal.contains(event.target) && event.target !== openModalBtn) {
+                modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
+            }
+        };
+
         // Função para habilitar edição na linha correspondente
         function enableEdit(editButton) {
             const row = editButton.closest('tr');

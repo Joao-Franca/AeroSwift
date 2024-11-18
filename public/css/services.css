@@ -201,3 +201,10 @@ nav ul li a:hover {
     display: block;
 }
 
+.input-date {
+    width: 93%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
