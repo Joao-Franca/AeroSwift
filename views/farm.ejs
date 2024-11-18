@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AeroSwift - Início</title>
+    <title>AeroSwift - Fazendas</title>
     <link rel="stylesheet" href="/css/farm.css">
     <link rel="shortcut icon" href="/images/favicon.svg" type="image/x-icon">
 </head>
@@ -46,9 +46,12 @@
     </header>
 
     <main>
-        <!-- Container para o botão de nova fazenda -->
+        <!-- Container para o título e botão de nova fazenda -->
         <div class="nova-fazenda-container">
-            <button class="fazenda-submit-btn" id="novaFazendaBtn">Nova Fazenda</button>
+            <h1>Fazendas</h1>
+            <button class="nova-fazenda-btn" id="novaFazendaBtn">
+                Nova Fazenda <img src="/images/newfarm.svg" alt="Adicionar">
+            </button>
         </div>
 
         <!-- Modal para adicionar uma nova fazenda -->
@@ -66,7 +69,7 @@
                         <input type="file" id="imagemFazenda" name="imagemFazenda" accept="image/*" required>
                     </div>
                     <div class="fazenda-form-group">
-                        <label for="pdfFazenda">PDF da Fazenda:</label>
+                        <label for="pdfFazenda">PDF do Mapa da Fazenda:</label>
                         <input type="file" id="pdfFazenda" name="pdfFazenda" accept=".pdf" required>
                     </div>
                     <button type="submit" class="fazenda-submit-btn">Salvar Fazenda</button>
@@ -77,7 +80,7 @@
         <!-- Seção para listar fazendas -->
         <section class="fazendas-list">
             <% fazendas.forEach(fazenda => { %>
-                <div class="fazenda-item">
+                <div class="fazenda-item" id="fazenda-<%= fazenda.id %>">
                     <!-- Imagem da fazenda -->
                     <% if (fazenda.imagem) { %>
                         <img src="<%= fazenda.imagem %>" alt="Imagem da Fazenda <%= fazenda.nome %>" class="fazenda-imagem">
@@ -86,13 +89,38 @@
                     <!-- Informações da fazenda -->
                     <div class="fazenda-info">
                         <div class="fazenda-nome"><%= fazenda.nome %></div>
+                    </div>
 
-                        <!-- Link para o PDF -->
-                        <% if (fazenda.mapa) { %>
-                            <a href="<%= fazenda.mapa %>" target="_blank" class="fazenda-pdf-link">Visualizar PDF</a>
-                        <% } else { %>
-                            <p class="fazenda-sem-pdf">PDF não disponível</p>
-                        <% } %>
+                    <!-- Botões de ação (editar e deletar) -->
+                    <div class="fazenda-acoes">
+                        <button class="fazenda-edit-button" onclick="editarFazenda('<%= fazenda.id %>')">
+                            <img src="/images/edit.svg" alt="Editar Fazenda">
+                        </button>
+                        <button class="fazenda-delete-button" onclick="deletarFazenda('<%= fazenda.id %>')">
+                            <img src="/images/delete.svg" alt="Deletar Fazenda">
+                        </button>
+                    </div>
+
+                    <!-- Formulário de edição inline -->
+                    <div class="fazenda-edit-form" id="edit-form-<%= fazenda.id %>" style="display: none;">
+                        <form action="/gestor/farm/edit/<%= fazenda.id %>" method="POST" enctype="multipart/form-data">
+                            <div class="fazenda-form-group">
+                                <label for="nomeFazenda-<%= fazenda.id %>">Nome da Fazenda:</label>
+                                <input type="text" id="nomeFazenda-<%= fazenda.id %>" name="nomeFazenda" value="<%= fazenda.nome %>" required>
+                            </div>
+                            <div class="fazenda-form-group">
+                                <label for="imagemFazenda-<%= fazenda.id %>">Imagem da Fazenda:</label>
+                                <input type="file" id="imagemFazenda-<%= fazenda.id %>" name="imagemFazenda" accept="image/*">
+                            </div>
+                            <div class="fazenda-form-group">
+                                <label for="pdfFazenda-<%= fazenda.id %>">PDF do Mapa da Fazenda:</label>
+                                <input type="file" id="pdfFazenda-<%= fazenda.id %>" name="pdfFazenda" accept=".pdf">
+                            </div>
+                            <div class="edit-actions">
+                                <button type="submit" class="fazenda-submit-btn">Salvar</button>
+                                <button type="button" class="fazenda-cancel-btn" onclick="cancelarEdicao('<%= fazenda.id %>')">Cancelar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             <% }) %>
@@ -138,6 +166,36 @@
                 fazendaModal.style.display = 'none';
             }
         };
+
+        // Função para editar fazenda
+        function editarFazenda(id) {
+            const editForm = document.getElementById(`edit-form-${id}`);
+            editForm.style.display = 'block';
+        }
+
+        // Função para cancelar edição
+        function cancelarEdicao(id) {
+            const editForm = document.getElementById(`edit-form-${id}`);
+            editForm.style.display = 'none';
+        }
+
+        // Função para deletar fazenda
+        function deletarFazenda(id) {
+            if (confirm('Tem certeza que deseja deletar esta fazenda?')) {
+                fetch(`/gestor/farm/delete/${id}`, { method: 'DELETE' })
+                    .then(response => {
+                        if (response.ok) {
+                            document.getElementById(`fazenda-${id}`).remove();
+                        } else {
+                            alert('Erro ao deletar a fazenda');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao deletar a fazenda:', error);
+                        alert('Erro ao deletar a fazenda');
+                    });
+            }
+        }
     </script>
 </body>
 </html>

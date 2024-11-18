@@ -113,6 +113,55 @@ router.post('/farm/add', upload.fields([{ name: 'imagemFazenda' }, { name: 'pdfF
     }
 });
 
+// Rota para editar uma fazenda no banco de dados (protegida)
+router.put('/farm/edit/:id', upload.fields([{ name: 'imagem' }, { name: 'pdf' }]), async (req, res) => {
+    const { id } = req.params;
+    const { nome } = req.body;
+    const imagem = req.files['imagem'] ? req.files['imagem'][0].filename : null;
+    const pdf = req.files['pdf'] ? req.files['pdf'][0].filename : null;
+
+    try {
+        let query = 'UPDATE fazendas SET nome = $1';
+        let params = [nome];
+
+        // Adiciona imagem ao query se for enviada
+        if (imagem) {
+            query += ', imagem = $2';
+            params.push(imagem);
+        }
+
+        // Adiciona PDF ao query se for enviado
+        if (pdf) {
+            query += imagem ? ', mapa = $3' : ', mapa = $2';
+            params.push(pdf);
+        }
+
+        // Determina a posição do ID dependendo do número de parâmetros adicionados
+        const idPosition = imagem && pdf ? 4 : (imagem || pdf) ? 3 : 2;
+        query += ` WHERE id = $${idPosition}`;
+        params.push(id);
+
+        await pool.query(query, params);
+
+        res.sendStatus(200); // Responde com sucesso
+    } catch (err) {
+        console.error('Erro ao atualizar fazenda:', err);
+        res.status(500).send('Erro ao atualizar fazenda.');
+    }
+});
+
+// Rota para deletar uma fazenda
+router.delete('/farm/delete/:id', isAuthenticated, async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query('DELETE FROM fazendas WHERE id = $1', [id]);
+        res.sendStatus(200); // Resposta de sucesso
+    } catch (err) {
+        console.error('Erro ao deletar fazenda:', err);
+        res.status(500).send('Erro ao deletar fazenda');
+    }
+});
+
 // Rota para exibir a tela de cadastrar usuários (protegida)
 router.get("/user", isAuthenticated, (req, res) => {
     res.render("user");
