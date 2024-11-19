@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AeroSwift - Início</title>
+    <title>AeroSwift - Serviços</title>
     <link rel="stylesheet" href="/css/services.css">
     <link rel="shortcut icon" href="/images/favicon.svg" type="image/x-icon">
 </head>
@@ -46,39 +46,45 @@
 
     <div class="form-container">
         <h2>Cadastrar serviço</h2>
-        <form action="#" method="POST">
+        <form id="serviceForm">
             <div class="form-group">
                 <label for="fazenda">Fazenda</label>
-                <select id="fazenda" name="fazenda">
+                <select id="fazenda" name="fazenda" required>
                     <option value="" disabled selected>Selecione a fazenda</option>
-                    <!-- Opções da fazenda -->
+                    <% fazendas.forEach(fazenda => { %>
+                        <option value="<%= fazenda.nome %>"><%= fazenda.nome %></option>
+                    <% }) %>
                 </select>
             </div>
     
             <div class="form-group">
                 <label for="servico">Serviço</label>
-                <select id="servico" name="servico">
+                <select id="servico" name="servico" required>
                     <option value="" disabled selected>Selecione o serviço</option>
-                    <!-- Opções do serviço -->
+                    <% operacoes.forEach(operacao => { %>
+                        <option value="<%= operacao.tipo_operacao %>"><%= operacao.tipo_operacao %></option>
+                    <% }) %>
                 </select>
             </div>
     
             <div class="form-group">
                 <label for="drone">Drone</label>
-                <select id="drone" name="drone">
+                <select id="drone" name="drone" required>
                     <option value="" disabled selected>Selecione o drone</option>
-                    <!-- Opções de drones -->
+                    <% drones.forEach(drone => { %>
+                        <option value="<%= drone.modelo_drone %>"><%= drone.modelo_drone %></option>
+                    <% }) %>
                 </select>
             </div>
     
             <div class="form-group">
                 <label for="colaborador">Colaborador</label>
-                <select id="colaborador" name="colaborador">
+                <select id="colaborador" name="colaborador" required>
                     <option value="" disabled selected>Selecione o colaborador</option>
-                    <option value="1">Colaborador AeroSwift</option>
+                    <option value="Colaborador AeroSwift">Colaborador AeroSwift</option>
                 </select>
             </div>
-
+    
             <div class="form-group">
                 <label for="dataServico">Data do Serviço</label>
                 <input type="date" id="dataServico" name="dataServico" required class="input-date">
@@ -92,22 +98,48 @@
     </div>
     
     <script>
-            // Pegar o botão e o modal
-    const openModalBtn = document.getElementById('openModalBtn');
-    const modal = document.getElementById('perfilModal');
+        // Modal de perfil
+        const openModalBtn = document.getElementById('openModalBtn');
+        const modal = document.getElementById('perfilModal');
 
-    // Quando o botão for clicado, mostra ou esconde o modal
-    openModalBtn.onclick = function(event) {
-        event.stopPropagation(); // Evita que o clique no botão feche o modal
-        modal.classList.toggle('show'); // Alterna a visibilidade do modal
-    };
+        openModalBtn.onclick = function(event) {
+            event.stopPropagation(); 
+            modal.classList.toggle('show');
+        };
 
-    // Fecha o modal ao clicar fora dele
-    window.onclick = function(event) {
-        if (!modal.contains(event.target) && event.target !== openModalBtn) {
-            modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
-        }
-    };
+        window.onclick = function(event) {
+            if (!modal.contains(event.target) && event.target !== openModalBtn) {
+                modal.classList.remove('show');
+            }
+        };
+
+        // Submissão do formulário de cadastro de serviço
+        const serviceForm = document.getElementById('serviceForm');
+
+        serviceForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); 
+
+            const formData = new FormData(serviceForm);
+
+            try {
+                const response = await fetch('/gestor/services/add', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Serviço cadastrado com sucesso!');
+                    window.location.reload();
+                } else {
+                    alert(result.message || 'Erro ao cadastrar o serviço.');
+                }
+            } catch (error) {
+                console.error('Erro ao cadastrar o serviço:', error);
+                alert('Erro ao cadastrar o serviço. Por favor, tente novamente.');
+            }
+        });
     </script>
 </body>
 </html>

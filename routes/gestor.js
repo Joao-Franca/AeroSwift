@@ -64,15 +64,80 @@ router.get('/logout', (req, res) => {
     });
 });
 
+
 // Rota para exibir a tela inicial (protegida)
-router.get("/home", isAuthenticated, (req, res) => {
-    res.render("home");
+router.get("/home", isAuthenticated, async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                s.id AS servico_id,
+                TO_CHAR(s.data, 'DD/MM/YYYY') AS data,
+                s.status,
+                s.servico,
+                s.colaborador,
+                s.drone,
+                f.nome AS fazenda_nome,
+                f.imagem AS mapa,
+                f.pdf AS pdf
+            FROM servico s
+            INNER JOIN fazendas f ON s.fazenda::VARCHAR = f.nome::VARCHAR
+        `;
+        const result = await pool.query(query);
+        const servicos = result.rows;
+
+        // Renderiza a página 'home.ejs' e passa a variável 'servicos' para o template
+        res.render('home', { servicos });
+    } catch (err) {
+        console.error('Erro ao buscar serviços:', err);
+        res.status(500).send('Erro ao buscar serviços.');
+    }
 });
 
+
+
 // Rota para exibir a tela de serviços (protegida)
-router.get("/services", isAuthenticated, (req, res) => {
-    res.render("services");
+router.get("/services", isAuthenticated, async (req, res) => {
+    try {
+        const fazendasResult = await pool.query('SELECT * FROM fazendas');
+        const dronesResult = await pool.query('SELECT * FROM drone');
+        const operacoesResult = await pool.query('SELECT * FROM tipooperacao');
+
+        const fazendas = fazendasResult.rows;
+        const drones = dronesResult.rows;
+        const operacoes = operacoesResult.rows;
+
+        res.render('services', { fazendas, drones, operacoes });
+    } catch (err) {
+        console.error('Erro ao buscar dados:', err);
+        res.status(500).send('Erro ao buscar dados.');
+    }
 });
+
+// Rota para cadastrar um novo serviço na tabela "servico" (protegida)
+router.post('/services/add', upload.none(), async (req, res) => {
+    const { fazenda, servico, drone, colaborador, dataServico } = req.body;
+
+    // Log para verificar se todos os dados estão sendo recebidos corretamente
+    console.log('Dados Recebidos:', { fazenda, servico, drone, colaborador, dataServico });
+
+    try {
+        if (!dataServico) {
+            throw new Error('A data do serviço é obrigatória.');
+        }
+
+        const query = `
+            INSERT INTO servico (fazenda, servico, drone, colaborador, data)
+            VALUES ($1, $2, $3, $4, $5)
+        `;
+        await pool.query(query, [fazenda, servico, drone, colaborador, dataServico]);
+
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.error('Erro ao cadastrar o serviço:', err);
+        res.status(500).json({ success: false, message: 'Erro ao cadastrar o serviço. Por favor, tente novamente.' });
+    }
+});
+
 
 // Rota para exibir a tela de fazendas com a listagem das fazendas (protegida)
 router.get("/farm", isAuthenticated, async (req, res) => {

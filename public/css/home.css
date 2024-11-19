@@ -53,21 +53,12 @@ nav ul li a {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-nav ul li a:hover {
-    color: #007bff;
-}
-
 .perfil-btn {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
     position: relative;
-}
-
-.perfil-btn img {
-    width: 30px;
-    height: 30px;
 }
 
 .modal {
@@ -128,3 +119,102 @@ nav ul li a:hover {
     display: block;
 }
 
+/* Estilo para lista de serviços */
+.servicos-list {
+    margin: 20px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espaçamento entre os elementos da lista */
+}
+
+.servico-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 20px; /* Mais padding para arejar o item */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Espaçamento entre os itens */
+}
+
+/* Divisão do nome e outros tópicos */
+.servico-topico {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+.servico-imagem {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+}
+
+.fazenda-nome {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.servico-detalhes {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly; /* Espaçamento uniforme entre os detalhes */
+    flex: 3;
+    gap: 20px;
+}
+
+.servico-data,
+.servico-status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.servico-detalhes-divider {
+    height: 60px;
+    width: 2px;
+    background-color: #ddd;
+}
+
+.acompanhar-button {
+    padding: 12px 25px; /* Botão maior */
+    background-color: #32cd32;
+    color: white;
+    border: none;
+    border-radius: 20px; /* Botão mais arredondado */
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.acompanhar-button:hover {
+    background-color: #28a745;
+}
+
+.deletar-button {
+    padding: 12px 25px;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deletar-button:hover {
+    background-color: #c9302c;
+}

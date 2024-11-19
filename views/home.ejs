@@ -44,9 +44,55 @@
         </div>
     </header>
 
+    <main>
+        <!-- Seção para listar serviços -->
+        <section class="servicos-list">
+            <% servicos.forEach(servico => { %>
+                <div class="servico-item">
+                    <!-- Imagem e Nome da Fazenda -->
+                    <div class="servico-topico">
+                        <% if (servico.mapa) { %>
+                            <img src="/uploads/<%= servico.mapa %>" alt="Mapa da Fazenda <%= servico.fazenda_nome %>" class="servico-imagem">
+                        <% } %>
+                        <div class="fazenda-nome"><%= servico.fazenda_nome %></div>
+                    </div>
+
+                    <!-- Divisão com informações -->
+                    <div class="servico-detalhes">
+                        <!-- Data -->
+                        <div class="servico-data">
+                            <strong>Data:</strong>
+                            <span><%= servico.data %></span>
+                        </div>
+
+                        <!-- Linha divisória -->
+                        <div class="servico-detalhes-divider"></div>
+
+                        <!-- Status -->
+                        <div class="servico-status">
+                            <strong>Status:</strong>
+                            <span><%= servico.status %></span>
+                        </div>
+
+                        <!-- Linha divisória -->
+                        <div class="servico-detalhes-divider"></div>
+
+                        <!-- Botão -->
+                        <div class="servico-acoes">
+                            <% if (servico.status === 'Em andamento') { %>
+                                <button class="acompanhar-button" onclick="window.location.href='/gestor/acompanhamento/<%= servico.servico_id %>'">Acompanhar</button>
+                            <% } else { %>
+                                <button class="deletar-button" onclick="deletarServico('<%= servico.servico_id %>')">Excluir</button>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </section>
+    </main>
 
     <script>
-                // Pegar o botão e o modal
+        // Pegar o botão e o modal
         const openModalBtn = document.getElementById('openModalBtn');
         const modal = document.getElementById('perfilModal');
 
@@ -63,8 +109,25 @@
             }
         };
 
-
+        function deletarServico(servicoId) {
+            if (confirm('Tem certeza que deseja excluir este serviço?')) {
+                fetch(`/gestor/servico/delete/${servicoId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Remove o item da página após a exclusão
+                        document.getElementById(`servico-${servicoId}`).remove();
+                    } else {
+                        alert('Erro ao excluir o serviço.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao excluir o serviço:', error);
+                    alert('Erro ao excluir o serviço.');
+                });
+            }
+        }
     </script>
 </body>
 </html>
-
