@@ -25,9 +25,10 @@
                 </li>
             </ul>
         </nav>
-        
+
         <div id="perfilModal" class="modal">
             <div class="modal-content">
+                <span class="close-modal" id="closePerfilModal">&times;</span>
                 <ul>
                     <li>
                         <button class="header-button" type="button" onclick="window.location.href='/gestor/user'">
@@ -42,13 +43,25 @@
                 </ul>
             </div>
         </div>
+       
     </header>
 
     <main>
+        <!-- Título principal da página -->
+        <h1 class="main-title">Operações Agendadas</h1>
+
+        <!-- Barra de pesquisa -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Pesquisar fazenda">
+            <button class="search-button" onclick="filtrarServicos()">
+                <img src="/images/pesquisa.svg" alt="Pesquisar">
+            </button>
+        </div>
+
         <!-- Seção para listar serviços -->
-        <section class="servicos-list">
+        <section class="servicos-list" id="servicosList">
             <% servicos.forEach(servico => { %>
-                <div class="servico-item">
+                <div class="servico-item" id="servico-<%= servico.servico_id %>">
                     <!-- Imagem e Nome da Fazenda -->
                     <div class="servico-topico">
                         <% if (servico.mapa) { %>
@@ -92,20 +105,24 @@
     </main>
 
     <script>
-        // Pegar o botão e o modal
+        // Modal de perfil
         const openModalBtn = document.getElementById('openModalBtn');
-        const modal = document.getElementById('perfilModal');
+        const perfilModal = document.getElementById('perfilModal');
+        const closePerfilModal = document.getElementById('closePerfilModal');
 
-        // Quando o botão for clicado, mostra ou esconde o modal
         openModalBtn.onclick = function(event) {
-            event.stopPropagation(); // Evita que o clique no botão feche o modal
-            modal.classList.toggle('show'); // Alterna a visibilidade do modal
+            event.stopPropagation();
+            // Alterna a visibilidade do modal
+            perfilModal.classList.toggle('show');
         };
 
-        // Fecha o modal ao clicar fora dele
+        closePerfilModal.onclick = function() {
+            perfilModal.classList.remove('show');
+        };
+
         window.onclick = function(event) {
-            if (!modal.contains(event.target) && event.target !== openModalBtn) {
-                modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
+            if (event.target === perfilModal) {
+                perfilModal.classList.remove('show');
             }
         };
 
@@ -127,6 +144,23 @@
                     alert('Erro ao excluir o serviço.');
                 });
             }
+        }
+
+        // Função para filtrar os serviços de acordo com a barra de pesquisa
+        document.getElementById('searchInput').addEventListener('input', filtrarServicos);
+        
+        function filtrarServicos() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const servicos = document.querySelectorAll('.servico-item');
+
+            servicos.forEach(servico => {
+                const fazendaNome = servico.querySelector('.fazenda-nome').textContent.toLowerCase();
+                if (fazendaNome.includes(input)) {
+                    servico.style.display = 'flex'; // Mostra o serviço se encontrar uma correspondência
+                } else {
+                    servico.style.display = 'none'; // Esconde o serviço se não encontrar correspondência
+                }
+            });
         }
     </script>
 </body>

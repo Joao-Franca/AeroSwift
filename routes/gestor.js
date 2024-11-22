@@ -93,6 +93,19 @@ router.get("/home", isAuthenticated, async (req, res) => {
     }
 });
 
+// Rota para deletar um serviço
+router.delete('/servico/delete/:id', isAuthenticated, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await pool.query('DELETE FROM servico WHERE id = $1', [id]);
+        res.sendStatus(200); // Responde com sucesso
+    } catch (err) {
+        console.error('Erro ao deletar serviço:', err);
+        res.status(500).send('Erro ao deletar serviço');
+    }
+});
+
 
 
 // Rota para exibir a tela de serviços (protegida)
