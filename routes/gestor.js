@@ -77,8 +77,8 @@ router.get("/home", isAuthenticated, async (req, res) => {
                 s.colaborador,
                 s.drone,
                 f.nome AS fazenda_nome,
-                f.imagem AS mapa,
-                f.pdf AS pdf
+                f.imagem AS imagem,  -- Alterado para imagem
+                f.mapa AS mapa        -- Mapa mantido separado para o PDF
             FROM servico s
             INNER JOIN fazendas f ON s.fazenda::VARCHAR = f.nome::VARCHAR
         `;
@@ -186,47 +186,53 @@ router.post('/farm/add', upload.fields([{ name: 'imagemFazenda' }, { name: 'pdfF
         // Redirecionar após o cadastro bem-sucedido
         res.redirect('/gestor/farm');
     } catch (err) {
-        console.error('Erro ao inserir a fazenda:', err);
-        res.status(500).send('Erro ao cadastrar a fazenda.');
+        if (err.code === '23505') { // Código de erro de violação de unicidade no Postgres
+            console.error('Erro ao inserir a fazenda: fazenda já cadastrada.');
+            res.status(400).send(`<script>alert('Fazenda já cadastrada no sistema'); window.location.href = '/gestor/farm';</script>`);
+        } else {
+            console.error('Erro ao inserir a fazenda:', err);
+            res.status(500).send('Erro ao cadastrar a fazenda.');
+        }
     }
 });
 
 // Rota para editar uma fazenda no banco de dados (protegida)
-router.put('/farm/edit/:id', upload.fields([{ name: 'imagem' }, { name: 'pdf' }]), async (req, res) => {
+router.post('/farm/edit/:id', upload.fields([{ name: 'imagemFazenda' }, { name: 'pdfFazenda' }]), async (req, res) => {
     const { id } = req.params;
-    const { nome } = req.body;
-    const imagem = req.files['imagem'] ? req.files['imagem'][0].filename : null;
-    const pdf = req.files['pdf'] ? req.files['pdf'][0].filename : null;
+    const { nomeFazenda } = req.body;
+    const imagem = req.files['imagemFazenda'] ? req.files['imagemFazenda'][0].filename : null;
+    const mapa = req.files['pdfFazenda'] ? req.files['pdfFazenda'][0].filename : null;
 
     try {
         let query = 'UPDATE fazendas SET nome = $1';
-        let params = [nome];
+        let params = [nomeFazenda];
+        let currentIndex = 2;
 
-        // Adiciona imagem ao query se for enviada
         if (imagem) {
-            query += ', imagem = $2';
+            query += `, imagem = $${currentIndex}`;
             params.push(imagem);
+            currentIndex++;
         }
 
-        // Adiciona PDF ao query se for enviado
-        if (pdf) {
-            query += imagem ? ', mapa = $3' : ', mapa = $2';
-            params.push(pdf);
+        if (mapa) {
+            query += `, mapa = $${currentIndex}`;
+            params.push(mapa);
+            currentIndex++;
         }
 
-        // Determina a posição do ID dependendo do número de parâmetros adicionados
-        const idPosition = imagem && pdf ? 4 : (imagem || pdf) ? 3 : 2;
-        query += ` WHERE id = $${idPosition}`;
+        query += ` WHERE id = $${currentIndex}`;
         params.push(id);
 
         await pool.query(query, params);
 
-        res.sendStatus(200); // Responde com sucesso
+        res.json({ success: true, message: 'Fazenda atualizada com sucesso!' });
     } catch (err) {
         console.error('Erro ao atualizar fazenda:', err);
-        res.status(500).send('Erro ao atualizar fazenda.');
+        res.status(500).json({ success: false, message: 'Erro ao atualizar fazenda.' });
     }
 });
+
+
 
 // Rota para deletar uma fazenda
 router.delete('/farm/delete/:id', isAuthenticated, async (req, res) => {

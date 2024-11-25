@@ -46,7 +46,6 @@
     </header>
 
     <main>
-        <!-- Container para o título e botão de nova fazenda -->
         <div class="nova-fazenda-container">
             <h1>Fazendas</h1>
             <button class="nova-fazenda-btn" id="novaFazendaBtn">
@@ -54,7 +53,14 @@
             </button>
         </div>
 
-        <!-- Modal para adicionar uma nova fazenda -->
+         <!-- Barra de pesquisa -->
+         <div class="search-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Pesquisar fazenda">
+            <button class="search-button" onclick="filtrarServicos()">
+                <img src="/images/pesquisa.svg" alt="Pesquisar">
+            </button>
+        </div>
+
         <div id="fazendaModal" class="fazenda-modal">
             <div class="fazenda-modal-content">
                 <span class="fazenda-close-modal" id="closeFazendaModal">&times;</span>
@@ -77,22 +83,24 @@
             </div>
         </div>
 
-        <!-- Seção para listar fazendas -->
         <section class="fazendas-list">
             <% fazendas.forEach(fazenda => { %>
                 <div class="fazenda-item" id="fazenda-<%= fazenda.id %>">
-                    <!-- Imagem da fazenda -->
                     <% if (fazenda.imagem) { %>
                         <img src="<%= fazenda.imagem %>" alt="Imagem da Fazenda <%= fazenda.nome %>" class="fazenda-imagem">
                     <% } %>
-
-                    <!-- Informações da fazenda -->
+                
                     <div class="fazenda-info">
                         <div class="fazenda-nome"><%= fazenda.nome %></div>
                     </div>
-
-                    <!-- Botões de ação (editar e deletar) -->
+                
                     <div class="fazenda-acoes">
+                        <% if (fazenda.mapa) { %>
+                            <a href="<%= fazenda.mapa %>" target="_blank" class="pdf-button">
+                                <img src="/images/pdf.svg" alt="Ver PDF da Fazenda">
+                                MAPA
+                            </a>
+                        <% } %>
                         <button class="fazenda-edit-button" onclick="editarFazenda('<%= fazenda.id %>')">
                             <img src="/images/edit.svg" alt="Editar Fazenda">
                         </button>
@@ -101,7 +109,6 @@
                         </button>
                     </div>
 
-                    <!-- Formulário de edição inline -->
                     <div class="fazenda-edit-form" id="edit-form-<%= fazenda.id %>" style="display: none;">
                         <form action="/gestor/farm/edit/<%= fazenda.id %>" method="POST" enctype="multipart/form-data">
                             <div class="fazenda-form-group">
@@ -128,27 +135,30 @@
     </main>
 
     <script>
-        // Modal de perfil
+                // Modal de perfil
         const openModalBtn = document.getElementById('openModalBtn');
         const perfilModal = document.getElementById('perfilModal');
-        const closePerfilModal = document.getElementById('closePerfilModal');
 
+        // Alternar modal de perfil ao clicar no botão
         openModalBtn.onclick = function(event) {
             event.stopPropagation();
-            perfilModal.style.display = 'block';
+            perfilModal.classList.toggle('show'); // Alterna a classe 'show' para abrir/fechar o modal
         };
 
-        closePerfilModal.onclick = function() {
-            perfilModal.style.display = 'none';
-        };
-
+        // Fechar o modal ao clicar fora dele
         window.onclick = function(event) {
-            if (event.target === perfilModal) {
-                perfilModal.style.display = 'none';
+            if (event.target !== openModalBtn && !perfilModal.contains(event.target)) {
+                perfilModal.classList.remove('show'); // Fecha o modal se o clique for fora dele
             }
         };
 
-        // Modal de nova fazenda
+        // Fechar o modal ao clicar no botão "X" (ícone de fechar)
+        const closePerfilModal = document.getElementById('closePerfilModal');
+        closePerfilModal.onclick = function() {
+            perfilModal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
+        };
+
+        // Modal para adicionar nova fazenda
         const novaFazendaBtn = document.getElementById('novaFazendaBtn');
         const fazendaModal = document.getElementById('fazendaModal');
         const closeFazendaModal = document.getElementById('closeFazendaModal');
@@ -167,17 +177,45 @@
             }
         };
 
-        // Função para editar fazenda
+        // Funções para edição e cancelamento de edição
         function editarFazenda(id) {
             const editForm = document.getElementById(`edit-form-${id}`);
             editForm.style.display = 'block';
         }
 
-        // Função para cancelar edição
         function cancelarEdicao(id) {
             const editForm = document.getElementById(`edit-form-${id}`);
             editForm.style.display = 'none';
         }
+
+        // Submissão do formulário de edição via AJAX
+        document.querySelectorAll('.fazenda-edit-form form').forEach(form => {
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const formData = new FormData(form);
+                const action = form.getAttribute('action');
+
+                try {
+                    const response = await fetch(action, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert('Fazenda atualizada com sucesso!');
+                        location.reload();
+                    } else {
+                        alert('Erro ao atualizar a fazenda. Tente novamente.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao atualizar a fazenda:', error);
+                    alert('Erro ao atualizar a fazenda. Tente novamente.');
+                }
+            });
+        });
 
         // Função para deletar fazenda
         function deletarFazenda(id) {
@@ -196,6 +234,33 @@
                     });
             }
         }
+
+        function filtrarFazendas() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const fazendas = document.querySelectorAll('.fazenda-item');
+    let encontrouFazenda = false;
+
+    fazendas.forEach(fazenda => {
+        const nomeFazenda = fazenda.querySelector('.fazenda-nome').textContent.toLowerCase();
+        if (nomeFazenda.includes(input)) {
+            fazenda.classList.remove('hidden'); // Mostra a fazenda
+            encontrouFazenda = true; // Marca como encontrada
+        } else {
+            fazenda.classList.add('hidden'); // Oculta a fazenda
+        }
+    });
+
+    // Verifica se alguma fazenda foi encontrada
+    const mensagemNenhumaFazenda = document.getElementById('nenhumaFazendaEncontrada');
+    if (!encontrouFazenda && input !== '') {
+        mensagemNenhumaFazenda.style.display = 'block'; // Mostra a mensagem
+    } else {
+        mensagemNenhumaFazenda.style.display = 'none'; // Esconde a mensagem
+    }
+}
+
+    // Evento de input na barra de pesquisa
+    document.getElementById('searchInput').addEventListener('input', filtrarFazendas);
     </script>
 </body>
 </html>

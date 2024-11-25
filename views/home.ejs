@@ -15,9 +15,9 @@
         </div>
 
         <nav>
-            <ul>
-                <li><a href="/gestor/services">SERVIÇOS</a></li>
-                <li><a href="/gestor/farm">FAZENDAS</a></li>
+            <ul class="nav-links">
+                <li><a href="/gestor/services" class="nav-item">SERVIÇOS</a></li>
+                <li><a href="/gestor/farm" class="nav-item">FAZENDAS</a></li>
                 <li>
                     <button class="perfil-btn" id="openModalBtn">
                         <img src="/images/perfil.svg" alt="Perfil" class="perfil-icon">
@@ -29,7 +29,7 @@
         <div id="perfilModal" class="modal">
             <div class="modal-content">
                 <span class="close-modal" id="closePerfilModal">&times;</span>
-                <ul>
+                <ul class="modal-options">
                     <li>
                         <button class="header-button" type="button" onclick="window.location.href='/gestor/user'">
                             <img src="/images/newuser.svg" alt="Novo Usuário" class="icon"> Novo usuário
@@ -43,7 +43,6 @@
                 </ul>
             </div>
         </div>
-       
     </header>
 
     <main>
@@ -58,18 +57,24 @@
             </button>
         </div>
 
-        <!-- Seção para listar serviços -->
         <section class="servicos-list" id="servicosList">
             <% servicos.forEach(servico => { %>
-                <div class="servico-item" id="servico-<%= servico.servico_id %>">
+                <div class="servico-item" id="servico-<%= servico.servico_id %>" 
+                    data-fazenda-nome="<%= servico.fazenda_nome %>"
+                    data-data="<%= servico.data %>"
+                    data-status="<%= servico.status %>"
+                    data-pdf="<%= servico.mapa %>"
+                    data-servico="<%= servico.servico %>"
+                    data-colaborador="<%= servico.colaborador %>"
+                    data-drone="<%= servico.drone %>">
                     <!-- Imagem e Nome da Fazenda -->
                     <div class="servico-topico">
-                        <% if (servico.mapa) { %>
-                            <img src="/uploads/<%= servico.mapa %>" alt="Mapa da Fazenda <%= servico.fazenda_nome %>" class="servico-imagem">
+                        <% if (servico.imagem) { %>
+                            <img src="/uploads/<%= servico.imagem %>" alt="Imagem da Fazenda <%= servico.fazenda_nome %>" class="servico-imagem" onclick="abrirDetalhes('<%= servico.servico_id %>')">
                         <% } %>
                         <div class="fazenda-nome"><%= servico.fazenda_nome %></div>
                     </div>
-
+        
                     <!-- Divisão com informações -->
                     <div class="servico-detalhes">
                         <!-- Data -->
@@ -77,19 +82,19 @@
                             <strong>Data:</strong>
                             <span><%= servico.data %></span>
                         </div>
-
+        
                         <!-- Linha divisória -->
                         <div class="servico-detalhes-divider"></div>
-
+        
                         <!-- Status -->
                         <div class="servico-status">
                             <strong>Status:</strong>
                             <span><%= servico.status %></span>
                         </div>
-
+        
                         <!-- Linha divisória -->
                         <div class="servico-detalhes-divider"></div>
-
+        
                         <!-- Botão -->
                         <div class="servico-acoes">
                             <% if (servico.status === 'Em andamento') { %>
@@ -103,6 +108,27 @@
             <% }) %>
         </section>
     </main>
+
+    <!-- Modal para detalhes da fazenda -->
+    <div id="detalhesModal" class="modal">
+        <div class="modal-content detalhes-modal-content">
+            <span class="close-modal" id="closeDetalhesModal">&times;</span>
+            <div class="detalhes-container">
+                <div class="detalhes-imagem-container">
+                    <img id="detalhesImagem" src="" alt="Mapa da Fazenda" class="detalhes-imagem">
+                </div>
+                <div class="detalhes-info-container">
+                    <h2>Detalhamento</h2>
+                    <p><strong>Fazenda</strong>: <span id="detalhesFazenda"></span></p>
+                    <p><strong>Data</strong>: <span id="detalhesData"></span></p>
+                    <p><strong>Tipo Operacao</strong>: <span id="detalhesServico"></span></p>
+                    <p><strong>Modelo drone</strong>: <span id="detalhesDrone"></span></p>
+                    <p><strong>Colaborador</strong>: <span id="detalhesColaborador"></span></p>
+                    <p id="detalhesPdfLink" style="display: none;"><a id="detalhesPdf" href="" target="_blank">VER PDF</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Modal de perfil
@@ -146,6 +172,54 @@
             }
         }
 
+        // Função para abrir o modal com detalhes da fazenda
+        function abrirDetalhes(servicoId) {
+            // Pegar informações do serviço
+            const servicoItem = document.getElementById(`servico-${servicoId}`);
+            const fazendaNome = servicoItem.getAttribute('data-fazenda-nome');
+            const data = servicoItem.getAttribute('data-data');
+            const status = servicoItem.getAttribute('data-status');
+            const pdf = servicoItem.getAttribute('data-pdf');
+            const servico = servicoItem.getAttribute('data-servico');
+            const colaborador = servicoItem.getAttribute('data-colaborador');
+            const drone = servicoItem.getAttribute('data-drone');
+            const mapaSrc = servicoItem.querySelector('.servico-imagem').src;
+
+            // Atualizar conteúdo do modal
+            document.getElementById('detalhesImagem').src = mapaSrc;
+            document.getElementById('detalhesFazenda').textContent = fazendaNome;
+            document.getElementById('detalhesData').textContent = data;
+            document.getElementById('detalhesServico').textContent = servico;
+            document.getElementById('detalhesDrone').textContent = drone;
+            document.getElementById('detalhesColaborador').textContent = colaborador;
+
+            const detalhesPdfLink = document.getElementById('detalhesPdfLink');
+            const detalhesPdf = document.getElementById('detalhesPdf');
+            if (pdf) {
+                detalhesPdf.href = `/uploads/${pdf}`;
+                detalhesPdfLink.style.display = 'block';
+            } else {
+                detalhesPdfLink.style.display = 'none';
+            }
+
+            // Mostrar modal de detalhes
+            document.getElementById('detalhesModal').style.display = 'block';
+        }
+
+        // Modal de detalhes
+        const detalhesModal = document.getElementById('detalhesModal');
+        const closeDetalhesModal = document.getElementById('closeDetalhesModal');
+
+        closeDetalhesModal.onclick = function() {
+            detalhesModal.style.display = 'none';
+        };
+
+        window.onclick = function(event) {
+            if (event.target === detalhesModal) {
+                detalhesModal.style.display = 'none';
+            }
+        };
+
         // Função para filtrar os serviços de acordo com a barra de pesquisa
         document.getElementById('searchInput').addEventListener('input', filtrarServicos);
         
@@ -163,5 +237,6 @@
             });
         }
     </script>
+
 </body>
 </html>

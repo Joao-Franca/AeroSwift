@@ -128,6 +128,9 @@ nav ul li a:hover {
     display: block;
 }
 
+#closePerfilModal {
+    display: none;
+}
 
 /* Estilo para lista de serviços */
 .servicos-list {
@@ -261,4 +264,100 @@ nav ul li a:hover {
 .search-button img {
     width: 20px;
     height: 20px;
+}
+
+/* Estilo do modal de detalhamento */
+#detalhesModal {
+    display: none; 
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Fundo escurecido */
+}
+
+#detalhesModal .modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 60%;
+    max-width: 900px;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 30px; /* Aumentei o gap para ajustar o espaçamento */
+}
+
+#closeDetalhesModal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.detalhes-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px; /* Ajuste do espaço entre imagem e informações */
+    width: 100%;
+}
+
+.detalhes-imagem {
+    width: 80%; /* Aumentei a largura para ocupar mais espaço */
+    max-width: 400px; /* Ajustei para garantir que a imagem possa crescer */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.detalhes-info {
+    width: 10%; /* Ajustei para balancear a largura da imagem e das informações */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Mantive o espaçamento interno */
+}
+
+.detalhes-info h2 {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px; /* Deixei a margem um pouco maior para destaque */
+    color: #333;
+}
+
+.detalhes-info p {
+    font-size: 16px;
+    color: #333;
+}
+
+.detalhes-info p strong {
+    font-weight: bold;
+}
+
+.pdf-button {
+    padding: 0px 150px;
+    background-color: #32cd32;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.pdf-button:hover {
+    background-color: #28a745;
 }
