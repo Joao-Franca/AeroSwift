@@ -6,6 +6,9 @@
     <title>AeroSwift - Usuário</title>
     <link rel="stylesheet" href="/css/user.css">
     <link rel="shortcut icon" href="/images/favicon.svg" type="image/x-icon">
+    <!-- Adicionando jQuery e jQuery Mask diretamente no head para evitar problemas de carregamento -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 </head>
 
 <body>
@@ -48,52 +51,79 @@
 
     <div class="form-container">
         <h2>Cadastrar usuário</h2>
+    
+        <% if (typeof errorMessage !== 'undefined') { %>
+            <div class="error-message">
+                <p><%= errorMessage %></p>
+            </div>
+        <% } %>
+    
         <form action="/gestor/user" method="POST">
             <div class="form-group">
-              <label for="nome">Nome Completo</label>
-              <input type="text" id="nome" name="nome" required>
+                <label for="nome">Nome Completo</label>
+                <input 
+                    type="text" 
+                    id="nome" 
+                    name="nome" 
+                    required 
+                    pattern="[A-Za-zÀ-ÿ\s]+" 
+                    title="Digite apenas letras e espaços. Números e caracteres especiais não são permitidos.">
             </div>
-          
+    
             <div class="form-group">
-              <label for="telefone">Telefone</label>
-              <input type="tel" id="telefone" name="telefone" required>
+                <label for="telefone">Telefone</label>
+                <input 
+                    type="tel" 
+                    id="telefone" 
+                    name="telefone" 
+                    required>
             </div>
-          
+    
             <div class="form-group">
-              <label for="usuario">Usuário</label>
-              <input type="text" id="usuario" name="usuario" required>
+                <label for="usuario">Usuário</label>
+                <input 
+                    type="text" 
+                    id="usuario" 
+                    name="usuario" 
+                    required>
             </div>
-          
+    
             <div class="form-group">
-              <label for="senha">Senha</label>
-              <input type="password" id="senha" name="senha" required>
+                <label for="senha">Senha</label>
+                <input 
+                    type="password" 
+                    id="senha" 
+                    name="senha" 
+                    required>
             </div>
-          
+    
             <div class="form-actions">
-              <button type="button" class="cancel-button" onclick="window.location.href='/gestor/home'">Cancelar</button>
-              <button type="submit" class="submit-button">Cadastrar</button>
+                <button type="button" class="cancel-button" onclick="window.location.href='/gestor/home'">Cancelar</button>
+                <button type="submit" class="submit-button">Cadastrar</button>
             </div>
-        </form>
-    </div>
 
     <script>
-        // Pegar o botão e o modal
-        const openModalBtn = document.getElementById('openModalBtn');
-        const modal = document.getElementById('perfilModal');
+        $(document).ready(function () {
+            // Aplica a máscara no campo de telefone
+            $('#telefone').mask('(00) 0 0000-0000');
+            
+            // Pegar o botão e o modal
+            const openModalBtn = document.getElementById('openModalBtn');
+            const modal = document.getElementById('perfilModal');
 
-        // Quando o botão for clicado, mostra ou esconde o modal
-        openModalBtn.onclick = function(event) {
-            event.stopPropagation(); // Evita que o clique no botão feche o modal
-            modal.classList.toggle('show'); // Alterna a visibilidade do modal
-        };
+            // Quando o botão for clicado, mostra ou esconde o modal
+            openModalBtn.onclick = function(event) {
+                event.stopPropagation(); // Evita que o clique no botão feche o modal
+                modal.classList.toggle('show'); // Alterna a visibilidade do modal
+            };
 
-        // Fecha o modal ao clicar fora dele
-        window.onclick = function(event) {
-            if (!modal.contains(event.target) && event.target !== openModalBtn) {
-                modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
-            }
-        };
+            // Fecha o modal ao clicar fora dele
+            window.onclick = function(event) {
+                if (!modal.contains(event.target) && event.target !== openModalBtn) {
+                    modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
+                }
+            };
+        });
     </script>
-
 </body>
 </html>

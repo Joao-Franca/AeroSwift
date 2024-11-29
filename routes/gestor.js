@@ -269,9 +269,22 @@ router.post('/user', isAuthenticated, async (req, res) => {
         res.redirect('/gestor/users');
     } catch (err) {
         console.error('Erro ao inserir o usuário:', err);
-        res.status(500).render('user', { errorMessage: 'Erro ao cadastrar o usuário. Por favor, tente novamente.' });
+
+        // Verifica se o erro é de duplicidade no PostgreSQL
+        if (err.code === '23505') {
+            // Renderiza a página com uma mensagem de erro específica para duplicidade
+            res.status(400).render('user', {
+                errorMessage: 'O nome de usuário já existe. Escolha outro.',
+            });
+        } else {
+            // Renderiza uma mensagem genérica para outros erros
+            res.status(500).render('user', {
+                errorMessage: 'Erro ao cadastrar o usuário. Por favor, tente novamente.',
+            });
+        }
     }
 });
+
 
 // Rota para listar todos os usuários (protegida)
 router.get('/users', isAuthenticated, async (req, res) => {
@@ -287,29 +300,44 @@ router.get('/users', isAuthenticated, async (req, res) => {
     }
 });
 
-// Rota para atualizar um usuário (protegida)
+// Rota para atualizar telefone, usuário e senha (protegida)
 router.put('/user/edit/:id', isAuthenticated, async (req, res) => {
     const { id } = req.params;
-    const { nome, telefone, usuario, senha } = req.body;
+    const { telefone, usuario, senha } = req.body;
 
     try {
+        // Validar se os campos obrigatórios foram enviados
+        if (!telefone && !usuario && !senha) {
+            return res.status(400).send('É necessário fornecer pelo menos um campo para atualizar.');
+        }
+
         // Criptografar a nova senha se ela for fornecida
         let hashedPassword;
         if (senha && senha.trim() !== "") {
             hashedPassword = await bcrypt.hash(senha, 10);
         }
 
-        // Montar a query e parâmetros dependendo da senha
-        let query = 'UPDATE usuario SET nome = $1, telefone = $2, usuario = $3';
-        let params = [nome, telefone, usuario];
+        // Montar a query dinamicamente para atualizar apenas os campos fornecidos
+        let query = 'UPDATE usuario SET';
+        const params = [];
+        let index = 1;
 
-        if (hashedPassword) {
-            query += ', senha = $4 WHERE id = $5';
-            params.push(hashedPassword, id);
-        } else {
-            query += ' WHERE id = $4';
-            params.push(id);
+        if (telefone) {
+            query += ` telefone = $${index++},`;
+            params.push(telefone);
         }
+        if (usuario) {
+            query += ` usuario = $${index++},`;
+            params.push(usuario);
+        }
+        if (hashedPassword) {
+            query += ` senha = $${index++},`;
+            params.push(hashedPassword);
+        }
+
+        // Remover a última vírgula e adicionar a cláusula WHERE
+        query = query.slice(0, -1) + ` WHERE id = $${index}`;
+        params.push(id);
 
         // Executar a query de atualização
         await pool.query(query, params);
@@ -320,6 +348,7 @@ router.put('/user/edit/:id', isAuthenticated, async (req, res) => {
         res.status(500).send('Erro ao atualizar usuário');
     }
 });
+
 
 // Rota para deletar usuário
 router.delete('/user/delete/:id', isAuthenticated, async (req, res) => {

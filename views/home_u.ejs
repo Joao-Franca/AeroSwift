@@ -38,34 +38,149 @@
         </div>
     </header>
 
+    <main>
+        <h1 class="main-title">Operações Agendadas</h1>
 
+        <!-- Barra de pesquisa -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Pesquisar fazenda">
+            <button class="search-button" onclick="filtrarServicos()">
+                <img src="/images/pesquisa.svg" alt="Pesquisar">
+            </button>
+        </div>
 
-    
+        <section class="servicos-list" id="servicosList">
+            <% servicos.forEach(servico => { %>
+                <div class="servico-item" id="servico-<%= servico.servico_id %>" 
+                    data-fazenda-nome="<%= servico.fazenda_nome %>"
+                    data-data="<%= servico.data %>"
+                    data-status="<%= servico.status %>"
+                    data-pdf="<%= servico.mapa %>"
+                    data-servico="<%= servico.servico %>"
+                    data-colaborador="<%= servico.colaborador %>"
+                    data-drone="<%= servico.drone %>">
+                    <div class="servico-topico">
+                        <% if (servico.imagem) { %>
+                            <img src="/uploads/<%= servico.imagem %>" alt="Imagem da Fazenda <%= servico.fazenda_nome %>" class="servico-imagem" onclick="abrirDetalhes('<%= servico.servico_id %>')">
+                        <% } %>
+                        <div class="fazenda-nome"><%= servico.fazenda_nome %></div>
+                    </div>
+        
+                    <div class="servico-detalhes">
+                        <div class="servico-data">
+                            <strong>Data:</strong>
+                            <span><%= servico.data %></span>
+                        </div>
+        
+                        <div class="servico-detalhes-divider"></div>
+        
+                        <div class="servico-status">
+                            <strong>Status:</strong>
+                            <span><%= servico.status %></span>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </section>
+    </main>
 
-
-
-
-
+    <!-- Modal para detalhes da fazenda -->
+    <div id="detalhesModal" class="modal">
+        <div class="modal-content detalhes-modal-content">
+            <span class="close-modal" id="closeDetalhesModal">&times;</span>
+            <div class="detalhes-container">
+                <div class="detalhes-imagem-container">
+                    <img id="detalhesImagem" src="" alt="Mapa da Fazenda" class="detalhes-imagem">
+                </div>
+                <div class="detalhes-info-container">
+                    <h2>Detalhamento</h2>
+                    <p><strong>Fazenda</strong>: <span id="detalhesFazenda"></span></p>
+                    <p><strong>Data</strong>: <span id="detalhesData"></span></p>
+                    <p><strong>Tipo Operação</strong>: <span id="detalhesServico"></span></p>
+                    <p><strong>Modelo drone</strong>: <span id="detalhesDrone"></span></p>
+                    <p><strong>Colaborador</strong>: <span id="detalhesColaborador"></span></p>
+                    <p id="detalhesPdfLink" style="display: none;"><a id="detalhesPdf" href="" target="_blank">MAPA COMPLETO</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-            // Pegar o botão e o modal
-    const openModalBtn = document.getElementById('openModalBtn');
-    const modal = document.getElementById('perfilModal');
+        // Abrir e fechar modal de perfil
+        const openModalBtn = document.getElementById('openModalBtn');
+        const perfilModal = document.getElementById('perfilModal');
 
-    // Quando o botão for clicado, mostra ou esconde o modal
-    openModalBtn.onclick = function(event) {
-        event.stopPropagation(); // Evita que o clique no botão feche o modal
-        modal.classList.toggle('show'); // Alterna a visibilidade do modal
-    };
+        openModalBtn.onclick = function(event) {
+            event.stopPropagation();
+            perfilModal.classList.toggle('show');
+        };
 
-    // Fecha o modal ao clicar fora dele
-    window.onclick = function(event) {
-        if (!modal.contains(event.target) && event.target !== openModalBtn) {
-            modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
+        window.onclick = function(event) {
+            if (event.target === perfilModal) {
+                perfilModal.classList.remove('show');
+            }
+        };
+
+        // Modal de detalhes
+        const detalhesModal = document.getElementById('detalhesModal');
+        const closeDetalhesModal = document.getElementById('closeDetalhesModal');
+
+        closeDetalhesModal.onclick = function() {
+            detalhesModal.style.display = 'none';
+        };
+
+        window.onclick = function(event) {
+            if (event.target === detalhesModal) {
+                detalhesModal.style.display = 'none';
+            }
+        };
+
+        function abrirDetalhes(servicoId) {
+            const servicoItem = document.getElementById(`servico-${servicoId}`);
+            const fazendaNome = servicoItem.getAttribute('data-fazenda-nome');
+            const data = servicoItem.getAttribute('data-data');
+            const pdf = servicoItem.getAttribute('data-pdf');
+            const servico = servicoItem.getAttribute('data-servico');
+            const colaborador = servicoItem.getAttribute('data-colaborador');
+            const drone = servicoItem.getAttribute('data-drone');
+            const mapaSrc = servicoItem.querySelector('.servico-imagem').src;
+
+            document.getElementById('detalhesImagem').src = mapaSrc;
+            document.getElementById('detalhesFazenda').textContent = fazendaNome;
+            document.getElementById('detalhesData').textContent = data;
+            document.getElementById('detalhesServico').textContent = servico;
+            document.getElementById('detalhesDrone').textContent = drone;
+            document.getElementById('detalhesColaborador').textContent = colaborador;
+
+            const detalhesPdfLink = document.getElementById('detalhesPdfLink');
+            if (pdf) {
+                document.getElementById('detalhesPdf').href = `/uploads/${pdf}`;
+                detalhesPdfLink.style.display = 'block';
+            } else {
+                detalhesPdfLink.style.display = 'none';
+            }
+
+            detalhesModal.style.display = 'block';
         }
-    };
-    </script>
 
+
+    //Barra de pesquisa
+    function filtrarServicos() {
+    const input = document.getElementById('searchInput').value.toLowerCase().trim();
+    const servicos = document.querySelectorAll('.servico-item');
+
+        servicos.forEach(servico => {
+            const fazendaNome = servico.getAttribute('data-fazenda-nome').toLowerCase();
+            if (fazendaNome.includes(input)) {
+                servico.style.display = ''; // Mostra o serviço
+            } else {
+                servico.style.display = 'none'; // Esconde o serviço
+            }
+        });
+    }
+
+    // Atualiza automaticamente ao digitar
+    document.getElementById('searchInput').addEventListener('input', filtrarServicos);
+    </script>
 </body>
 </html>
-

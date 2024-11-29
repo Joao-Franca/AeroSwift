@@ -38,31 +38,82 @@
         </div>
     </header>
 
+    <main>
+        <div class="nova-fazenda-container">
+            <h1>Fazendas</h1>
+        </div>
 
+        <!-- Barra de pesquisa -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Pesquisar fazenda">
+            <button class="search-button" onclick="filtrarFazendas()">
+                <img src="/images/pesquisa.svg" alt="Pesquisar">
+            </button>
+        </div>
 
+        <!-- Mensagem para quando nenhuma fazenda for encontrada -->
+        <div id="nenhumaFazendaEncontrada" class="mensagem-vazia" style="display: none;">
+            Nenhuma fazenda encontrada.
+        </div>
 
+        <section class="fazendas-list">
+            <% fazendas.forEach(fazenda => { %>
+                <div class="fazenda-item" id="fazenda-<%= fazenda.id %>">
+                    <% if (fazenda.imagem) { %>
+                        <img src="<%= fazenda.imagem %>" alt="Imagem da Fazenda <%= fazenda.nome %>" class="fazenda-imagem">
+                    <% } %>
+                
+                    <div class="fazenda-info">
+                        <div class="fazenda-nome"><%= fazenda.nome %></div>
+                    </div>
+                
+                    <div class="fazenda-acoes">
+                        <% if (fazenda.mapa) { %>
+                            <a href="<%= fazenda.mapa %>" target="_blank" class="pdf-button">
+                                <img src="/images/pdf.svg" alt="Ver PDF da Fazenda">
+                                MAPA
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            <% }) %>
+        </section>
+    </main>
 
-
-    
     <script>
-            // Pegar o botão e o modal
-    const openModalBtn = document.getElementById('openModalBtn');
-    const modal = document.getElementById('perfilModal');
+        // Pegar o botão e o modal
+        const openModalBtn = document.getElementById('openModalBtn');
+        const modal = document.getElementById('perfilModal');
 
-    // Quando o botão for clicado, mostra ou esconde o modal
-    openModalBtn.onclick = function(event) {
-        event.stopPropagation(); // Evita que o clique no botão feche o modal
-        modal.classList.toggle('show'); // Alterna a visibilidade do modal
-    };
+        // Quando o botão for clicado, mostra ou esconde o modal
+        openModalBtn.onclick = function(event) {
+            event.stopPropagation(); // Evita que o clique no botão feche o modal
+            modal.classList.toggle('show'); // Alterna a visibilidade do modal
+        };
 
-    // Fecha o modal ao clicar fora dele
-    window.onclick = function(event) {
-        if (!modal.contains(event.target) && event.target !== openModalBtn) {
-            modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
-        }
-    };
+        // Fecha o modal ao clicar fora dele
+        window.onclick = function(event) {
+            if (!modal.contains(event.target) && event.target !== openModalBtn) {
+                modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
+            }
+        };
+
+        function filtrarFazendas() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        const fazendas = document.querySelectorAll('.fazenda-item');
+
+        fazendas.forEach(fazenda => {
+            const nomeFazenda = fazenda.querySelector('.fazenda-nome').textContent.toLowerCase();
+            if (nomeFazenda.includes(input)) {
+                fazenda.classList.remove('hidden'); // Remove a classe que esconde a fazenda
+            } else {
+                fazenda.classList.add('hidden'); // Adiciona a classe que esconde a fazenda
+            }
+        });
+    }
+
+    // Evento de input para acionar o filtro automaticamente
+    document.getElementById('searchInput').addEventListener('input', filtrarFazendas);
     </script>
-
 </body>
 </html>
-

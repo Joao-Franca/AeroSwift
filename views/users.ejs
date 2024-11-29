@@ -14,7 +14,6 @@
         </div>
 
         <nav>
-            
             <ul>
                 <li><a href="/gestor/home">OPERAÇÕES</a></li>
                 <li><a href="/gestor/services">SERVIÇOS</a></li>
@@ -81,140 +80,159 @@
     </div>
 
     <script>
-         // Pegar o botão e o modal
-         const openModalBtn = document.getElementById('openModalBtn');
-        const modal = document.getElementById('perfilModal');
 
-        // Quando o botão for clicado, mostra ou esconde o modal
-        openModalBtn.onclick = function(event) {
-            event.stopPropagation(); // Evita que o clique no botão feche o modal
-            modal.classList.toggle('show'); // Alterna a visibilidade do modal
-        };
+    // Pegar o botão e o modal
+    const openModalBtn = document.getElementById('openModalBtn');
+    const modal = document.getElementById('perfilModal');
 
-        // Fecha o modal ao clicar fora dele
-        window.onclick = function(event) {
-            if (!modal.contains(event.target) && event.target !== openModalBtn) {
-                modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
-            }
-        };
+    // Quando o botão for clicado, mostra ou esconde o modal
+    openModalBtn.onclick = function(event) {
+        event.stopPropagation(); // Evita que o clique no botão feche o modal
+        modal.classList.toggle('show'); // Alterna a visibilidade do modal
+    };
 
-        // Função para habilitar edição na linha correspondente
-        function enableEdit(editButton) {
-            const row = editButton.closest('tr');
-            const saveButton = row.querySelector('.save-button');
-            const cancelButton = row.querySelector('.cancel-button');
-            const fields = row.querySelectorAll('.edit');
-
-            // Tornar os campos editáveis, incluindo o campo de senha
-            fields.forEach(field => {
-                field.contentEditable = true;
-                if (field.getAttribute('data-field') === 'senha') {
-                    field.innerText = ''; // Permite que a senha seja editada
-                }
-                field.classList.add('editable');
-            });
-
-            // Alternar visibilidade dos botões
-            editButton.style.display = 'none';
-            saveButton.style.display = 'inline';
-            cancelButton.style.display = 'inline';
+    // Fecha o modal ao clicar fora dele
+    window.onclick = function(event) {
+        if (!modal.contains(event.target) && event.target !== openModalBtn) {
+            modal.classList.remove('show'); // Remove a classe 'show' para fechar o modal
         }
+    };
+    
+    // Função para habilitar edição na linha correspondente
+    function enableEdit(editButton) {
+        const row = editButton.closest('tr');
+        const saveButton = row.querySelector('.save-button');
+        const cancelButton = row.querySelector('.cancel-button');
+        const fields = row.querySelectorAll('.edit');
 
-        // Função para salvar as alterações feitas na linha
-        function saveChanges(userId) {
-            const row = document.querySelector(`tr[data-id='${userId}']`);
-            const fields = row.querySelectorAll('.edit');
+        // Tornar os campos editáveis
+        fields.forEach(field => {
+            field.contentEditable = true;
+            field.classList.add('editable');
+        });
 
-            // Criar objeto para armazenar os dados atualizados
-            const updatedData = {};
+        // Alternar visibilidade dos botões
+        editButton.style.display = 'none';
+        saveButton.style.display = 'inline';
+        cancelButton.style.display = 'inline';
+    }
+
+    // Função para salvar as alterações feitas na linha
+    function saveChanges(userId) {
+        const row = document.querySelector(`tr[data-id='${userId}']`);
+        const fields = row.querySelectorAll('.edit');
+        let valid = true; // Variável para validação
+        const updatedData = {};
+
+        // Validar campos e coletar dados
+        fields.forEach(field => {
+            const fieldName = field.getAttribute('data-field');
+            const fieldValue = field.innerText.trim();
+
+            if (fieldName === 'nome') {
+                // Validar para aceitar apenas letras e espaços
+                if (!/^[A-Za-zÀ-ÿ\s]+$/.test(fieldValue)) {
+                    alert('O campo "Nome" deve conter apenas letras e espaços.');
+                    valid = false;
+                }
+            }
+
+            if (fieldName === 'telefone') {
+                // Validar para aceitar apenas números
+                if (!/^\d+$/.test(fieldValue)) {
+                    alert('O campo "Telefone" deve conter apenas números.');
+                    valid = false;
+                }
+            }
+
+            updatedData[fieldName] = fieldValue;
+        });
+
+        if (!valid) return; // Interrompe o salvamento se houver erro
+
+        // Enviar os dados ao servidor
+        fetch(`/gestor/user/edit/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Usuário atualizado com sucesso!');
+                // Recarrega a página após o alerta de sucesso
+                window.location.reload();
+            } else {
+                alert('Erro ao atualizar usuário.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao atualizar usuário.');
+        })
+        .finally(() => {
+            // Desabilitar a edição e alternar botões
             fields.forEach(field => {
-                const fieldName = field.getAttribute('data-field');
-                const fieldValue = field.innerText.trim();
-                updatedData[fieldName] = fieldValue;
+                field.contentEditable = false;
+                field.classList.remove('editable');
+                if (field.getAttribute('data-field') === 'senha') {
+                    field.innerText = '••••••••'; // Oculta a senha novamente após salvar
+                }
             });
+            row.querySelector('.edit-button').style.display = 'inline';
+            row.querySelector('.save-button').style.display = 'none';
+            row.querySelector('.cancel-button').style.display = 'none';
+        });
+    }
 
-            // Enviar os dados atualizados ao servidor via fetch
-            fetch(`/gestor/user/edit/${userId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedData)
+    // Função para cancelar a edição
+    function cancelEdit(cancelButton) {
+        const row = cancelButton.closest('tr');
+        const fields = row.querySelectorAll('.edit');
+
+        // Restaurar valores originais
+        fields.forEach(field => {
+            field.innerText = field.getAttribute('data-original-value');
+            field.contentEditable = false;
+            field.classList.remove('editable');
+        });
+
+        // Alternar visibilidade dos botões
+        row.querySelector('.edit-button').style.display = 'inline';
+        row.querySelector('.save-button').style.display = 'none';
+        cancelButton.style.display = 'none';
+    }
+
+    // Salvar o valor original ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+        const fields = document.querySelectorAll('.edit');
+        fields.forEach(field => {
+            field.setAttribute('data-original-value', field.innerText);
+        });
+    });
+
+    // Função para deletar usuário
+    function deleteUser(userId) {
+        if (confirm('Deseja realmente excluir este usuário?')) {
+            fetch(`/gestor/user/delete/${userId}`, {
+                method: 'DELETE',
             })
             .then(response => {
                 if (response.ok) {
-                    alert('Usuário atualizado com sucesso!');
+                    alert('Usuário deletado com sucesso!');
+                    const row = document.querySelector(`tr[data-id='${userId}']`);
+                    row.remove();
                 } else {
-                    alert('Erro ao atualizar usuário.');
+                    alert('Erro ao deletar usuário.');
                 }
             })
             .catch(error => {
                 console.error('Erro:', error);
-                alert('Erro ao atualizar usuário.');
-            })
-            .finally(() => {
-                // Desabilitar a edição e alternar botões
-                fields.forEach(field => {
-                    field.contentEditable = false;
-                    field.classList.remove('editable');
-                    if (field.getAttribute('data-field') === 'senha') {
-                        field.innerText = '••••••••'; // Oculta a senha novamente após salvar
-                    }
-                });
-                row.querySelector('.edit-button').style.display = 'inline';
-                row.querySelector('.save-button').style.display = 'none';
-                row.querySelector('.cancel-button').style.display = 'none';
+                alert('Erro ao deletar usuário.');
             });
         }
-
-        // Função para cancelar a edição e restaurar os valores originais
-        function cancelEdit(cancelButton) {
-            const row = cancelButton.closest('tr');
-            const fields = row.querySelectorAll('.edit');
-
-            // Restaurar os valores originais dos campos
-            fields.forEach(field => {
-                field.innerText = field.getAttribute('data-original-value');
-                field.contentEditable = false;
-                field.classList.remove('editable');
-            });
-
-            // Alternar visibilidade dos botões
-            row.querySelector('.edit-button').style.display = 'inline';
-            row.querySelector('.save-button').style.display = 'none';
-            cancelButton.style.display = 'none';
-        }
-
-        // Salvar o valor original quando a página é carregada
-        document.addEventListener('DOMContentLoaded', () => {
-            const fields = document.querySelectorAll('.edit');
-            fields.forEach(field => {
-                field.setAttribute('data-original-value', field.innerText);
-            });
-        });
-
-        // Função para deletar um usuário
-        function deleteUser(userId) {
-            if (confirm('Deseja realmente excluir este usuário?')) {
-                fetch(`/gestor/user/delete/${userId}`, {
-                    method: 'DELETE',
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Usuário deletado com sucesso!');
-                        // Remover a linha da tabela
-                        const row = document.querySelector(`tr[data-id='${userId}']`);
-                        row.remove();
-                    } else {
-                        alert('Erro ao deletar usuário.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao deletar usuário.');
-                });
-            }
-        }
+    }
     </script>
 </body>
 </html>

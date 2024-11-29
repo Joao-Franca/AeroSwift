@@ -7,6 +7,7 @@ const app = express();
 
 // Configurar a engine de visualização como EJS
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 // Middleware para servir arquivos estáticos da pasta 'public'
 app.use(express.static(path.join(__dirname, "public")));
@@ -22,13 +23,18 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(sessionMiddleware);
 
 // Middleware para sobrescrever métodos HTTP, permitindo uso de PUT e DELETE em formulários
-app.use(methodOverride('_method'));
+app.use(methodOverride("_method"));
 
 // Importar as rotas
 const gestorRoutes = require("./routes/gestor");
 
 // Usar as rotas
 app.use("/gestor", gestorRoutes);
+
+// Rotas de user
+const userRoutes = require("./routes/usuario");
+
+app.use("/usuario", userRoutes);
 
 // Rota padrão para capturar erros de rotas inexistentes
 app.use((req, res) => {

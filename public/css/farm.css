@@ -54,7 +54,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: #007bff;
+    color: #999999;
 }
 
 .perfil-btn {
@@ -310,9 +310,19 @@ nav ul li a:hover {
     border: 1px solid #ccc;
 }
 
-.fazenda-submit-btn {
+.fazenda-submit-btn  {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.fazenda-cancel-btn{
+    padding: 10px 20px;
+    background-color: #D32F2F;
     color: white;
     border: none;
     border-radius: 5px;
@@ -321,7 +331,7 @@ nav ul li a:hover {
 }
 
 .fazenda-submit-btn:hover {
-    background-color: #0056b3;
+    background-color: #5ed760;
 }
 
 .sem-pdf {
