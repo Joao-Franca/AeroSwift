@@ -29,7 +29,7 @@
             <div class="modal-content">
                 <ul>
                     <li>
-                        <button class="header-button" type="button" onclick="window.location.href='/usuario/login'">
+                        <button class="header-button" id="logoutBtn">
                             <img src="/images/logout.svg" alt="Logout" class="icon"> Logout
                         </button>
                     </li>
@@ -114,6 +114,14 @@
 
     // Evento de input para acionar o filtro automaticamente
     document.getElementById('searchInput').addEventListener('input', filtrarFazendas);
+
+    // Função para fazer o logout
+    document.getElementById('logoutBtn').onclick = function() {
+            // Redireciona para a rota de logout
+            window.location.href = '/gestor/logout';
+        };
     </script>
+
+    
 </body>
 </html>

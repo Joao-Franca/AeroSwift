@@ -196,7 +196,7 @@ nav ul li a:hover {
 
 .acompanhar-button {
     padding: 12px 25px; /* Botão maior */
-    background-color: #32cd32;
+    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 20px; /* Botão mais arredondado */
@@ -342,7 +342,7 @@ nav ul li a:hover {
 
 .pdf-button {
     padding: 0px 150px;
-    background-color: #32cd32;
+    background-color: #28a745;
     color: white;
     text-decoration: none;
     border: none;
@@ -377,4 +377,51 @@ nav ul li a:hover {
 #detalhesPdfLink a:hover {
     background-color: #45a049;
     transform: translateY(-2px);
+}
+
+/* Estilo para o modal de vídeo */
+#videoModal {
+    display: none; /* Inicialmente o modal está escondido */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Para centralizar o modal */
+    width: 550px; /* Aumentei a largura para 550px */
+    height: 500px; /* Altura fixa */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999; /* Garante que o modal fique por cima de outros elementos */
+}
+
+#videoModal .modal-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Preencher todo o modal */
+    padding: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+#videoModal video {
+    width: 450px;
+    height: 450px;
+    object-fit: cover; /* Faz o vídeo preencher o espaço do modal */
+}
+
+/* Ajuste para o botão de fechar */
+#videoModal .close-modal {
+    position: absolute;
+    top: 10px; /* Distância do topo */
+    right: 10px; /* Distância da borda direita */
+    color: #000;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10000;
+}
+
+#videoModal .close-modal:hover {
+    color: #f00; /* Cor de destaque ao passar o mouse */
 }

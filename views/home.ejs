@@ -98,7 +98,7 @@
                         <!-- Botão -->
                         <div class="servico-acoes">
                             <% if (servico.status === 'Em andamento') { %>
-                                <button class="acompanhar-button" onclick="window.location.href='/gestor/acompanhamento/<%= servico.servico_id %>'">Acompanhar</button>
+                                <button class="acompanhar-button" onclick="acompanharServico('<%= servico.servico_id %>')">Acompanhar</button>
                             <% } else { %>
                                 <button class="deletar-button" onclick="deletarServico('<%= servico.servico_id %>')">Excluir</button>
                             <% } %>
@@ -129,6 +129,20 @@
             </div>
         </div>
     </div>
+
+        <!-- Modal para vídeo -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content video-modal-content">
+            <span class="close-modal" id="closeVideoModal">&times;</span>
+            <div class="video-container">
+                <video id="videoPlayer" controls>
+                    <source src="/clips/aplicacao.mp4" type="video/mp4">
+                    Seu navegador não suporta a tag de vídeo.
+                </video>
+            </div>
+        </div>
+    </div>
+    
 
     <script>
         // Modal de perfil
@@ -222,7 +236,7 @@
 
         // Função para filtrar os serviços de acordo com a barra de pesquisa
         document.getElementById('searchInput').addEventListener('input', filtrarServicos);
-        
+
         function filtrarServicos() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const servicos = document.querySelectorAll('.servico-item');
@@ -236,6 +250,42 @@
                 }
             });
         }
+
+        // Modal de vídeo
+        const videoModal = document.getElementById('videoModal');
+        const closeVideoModal = document.getElementById('closeVideoModal');
+
+        // Função para abrir o modal de vídeo
+        function abrirVideo() {
+            videoModal.style.display = 'block';
+        }
+
+        // Função para fechar o modal de vídeo
+        closeVideoModal.onclick = function() {
+            videoModal.style.display = 'none';
+            // Pausar o vídeo quando o modal for fechado
+            document.getElementById('videoPlayer').pause();
+        };
+
+        // Fechar o modal clicando fora dele
+        window.onclick = function(event) {
+            if (event.target === videoModal) {
+                videoModal.style.display = 'none';
+                document.getElementById('videoPlayer').pause();
+            }
+        };
+
+        // Substitua o código do botão "Acompanhar" para abrir o modal de vídeo
+        function acompanharServico(servicoId) {
+            abrirVideo(); // Abre o modal de vídeo
+        }
+
+        // Função para fazer o logout
+        document.getElementById('logoutBtn').onclick = function() {
+            // Redireciona para a rota de logout
+            window.location.href = '/gestor/logout';
+        };
+
     </script>
 
 </body>

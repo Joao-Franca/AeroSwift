@@ -52,7 +52,19 @@ router.get("/logout", (req, res) => {
   });
 });
 
-// Rota para exibir a tela inicial (protegida)
+// Rota de logout para encerrar a sessão do gestor
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+      if (err) {
+          console.error('Erro ao encerrar a sessão:', err);
+          return res.redirect('/usuario/home'); // Redireciona para home se houver um erro
+      }
+      res.clearCookie('connect.sid'); // Remove o cookie de sessão do navegador
+      res.redirect('/usuario/login'); // Redireciona para a página de login do gestor
+  });
+});
+
+
 // Rota para exibir a tela 'home_u' com a lista de serviços
 router.get("/home", async (req, res) => {
   console.log("entrou");

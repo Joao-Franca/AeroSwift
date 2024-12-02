@@ -40,7 +40,7 @@
                         </button>
                     </li>
                     <li>
-                        <button class="header-button" type="button" onclick="window.location.href='/gestor/login'">
+                        <button class="header-button" id="logoutBtn">
                             <img src="/images/logout.svg" alt="Logout" class="icon"> Logout
                         </button>
                     </li>
@@ -124,6 +124,12 @@
                 }
             };
         });
+
+         // Função para fazer o logout
+         document.getElementById('logoutBtn').onclick = function() {
+            // Redireciona para a rota de logout
+            window.location.href = '/gestor/logout';
+        };
     </script>
 </body>
 </html>
