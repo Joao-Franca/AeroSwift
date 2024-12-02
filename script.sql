@@ -21,8 +21,6 @@ CREATE TABLE fazendas (
 	mapa VARCHAR(255) NOT NULL UNIQUE
 );
 
-
-SELECT * FROM fazendas;
 CREATE TABLE tipooperacao (
     id SERIAL PRIMARY KEY,
     tipo_operação VARCHAR(100) NOT NULL
@@ -33,15 +31,6 @@ CREATE TABLE drone (
     modelo_drone VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE detalhamento (
-    id SERIAL PRIMARY KEY,
-    fazenda_id INT REFERENCES fazendas(id),
-    tipo_operação_id INT REFERENCES tipooperação(id),
-    modelo_drone_id INT REFERENCES drone(id),
-    colaborador_id INT REFERENCES usuario(id),
-    data DATE NOT NULL
-);
-
 CREATE TABLE servico (
     id SERIAL PRIMARY KEY,
     data DATE NOT NULL,
@@ -50,6 +39,18 @@ CREATE TABLE servico (
     drone VARCHAR(100) NOT NULL,
     colaborador VARCHAR(100) NOT NULL 
 );
+
+CREATE TABLE operacoes (
+    id SERIAL PRIMARY KEY,
+    fazenda_id INT REFERENCES fazendas(id),
+    data DATE NOT NULL,
+    status VARCHAR(50) NOT NULL
+);
+
+
+
+
+
 
 CREATE OR REPLACE FUNCTION atualizar_status_servico()
 RETURNS TRIGGER AS $$
@@ -67,11 +68,3 @@ CREATE TRIGGER trigger_atualizar_status_servico
 BEFORE INSERT OR UPDATE ON servico
 FOR EACH ROW
 EXECUTE FUNCTION atualizar_status_servico();
-
-
-CREATE TABLE operacoes (
-    id SERIAL PRIMARY KEY,
-    fazenda_id INT REFERENCES fazendas(id),
-    data DATE NOT NULL,
-    status VARCHAR(50) NOT NULL
-);
